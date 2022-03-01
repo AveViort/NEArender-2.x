@@ -24,32 +24,46 @@
 #' @export
 
 
-import.gs <- function(tbl, Lowercase = 1, col.gene = 2, col.set = 3, gs.type = '', header=FALSE) {
-if (is.null(tbl)) {stop("No FGS file name given...");}
-if (is.data.frame(tbl)){
-  f1 <- tbl
-} else {
-  f1 <- read.table(tbl, row.names = NULL, header = header, sep = "\t", quote = "", dec = ".", na.strings = "", skip = 0, colClasses="character");
-}
-if (is.null(f1)) {stop(paste("Not a proper geneset file: ", tbl, "...", sep=" "));}
-if (nrow(f1) < 1) {stop(paste("Not a proper geneset file: ", tbl, "...", sep=" "));}
-if (length(unique(f1[,col.gene])) < 2) {stop(paste("Multiple gene IDs are not found: check parameter 'col.gene' ", tbl, "...", sep=" "));}
+import.gs <- function(tbl, Lowercase = 1, col.gene = 2, col.set = 3, 
+	gs.type = '' #typically, AGS or FGS
+	header = FALSE) 
+{
+	#if col.set = 0, then a single FGS list is created
+	#if col.set < 0, then each single gene becomes an FGS
+	if (is.null(tbl)) {
+		stop("No FGS file name given...");
+	}
+	
+	f1 <- read.table(tbl, row.names = NULL, header = header, sep = "\t", quote = "", dec = ".", na.strings = "", skip = 0, colClasses = "character");
+	if (is.null(f1)) {
+		stop(paste("Not a proper geneset file: ", tbl, "...", sep = " "));
+	}
+	if (nrow(f1) < 1) {
+		stop(paste("Not a proper geneset file: ", tbl, "...", sep= " " ));
+	}
+	if (length(unique(f1[,col.gene])) < 2) {
+		stop(paste("Multiple gene IDs are not found: check parameter 'col.gene' ", tbl, "...", sep = " "));
+	}
 
-for (i in 1:ncol(f1)) {
-if (Lowercase > 0 ) {
-f1[,i] <- tolower(f1[,i]);
-}}
-gs.list <- NULL
-if (col.set > 0) {
-for (f2  in unique(f1[,col.set])) {
-gs.list[[f2]] <- as.vector(unique(f1[which(f1[,col.set] == f2),col.gene]));
-}} else {
-if (col.set < 0) {
-for (f2  in unique(f1[,col.gene])) {
-gs.list[[f2]] <- as.vector(c(f2));
-}} else {
-gs.list[[paste('users_single_', gs.type, 'gs',sep="")]] <- as.vector(unique(f1[,col.gene]));
-}}
-gs.list = as.list(gs.list)
- return(gs.list);
+	for (i in 1:ncol(f1)) {
+		if (Lowercase > 0 ) { 
+			f1[,i] <- tolower(f1[,i]);
+		}
+	}
+	gs.list <- NULL
+	if (col.set > 0) {
+		for (f2  in unique(f1[,col.set])) {
+			gs.list[[f2]] <- as.vector(unique(f1[which(f1[,col.set] == f2),col.gene]));
+		}
+	} else {
+		if (col.set < 0) {
+			for (f2  in unique(f1[,col.gene])) {
+				gs.list[[f2]] <- as.vector(c(f2));
+			}
+		} else {
+			gs.list[[paste('users_single_', gs.type, 'gs', sep = "")]] <- as.vector(unique(f1[,col.gene]));
+		}
+	}
+	gs.list = as.list(gs.list)
+	return(gs.list);
 }

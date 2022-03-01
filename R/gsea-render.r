@@ -30,68 +30,77 @@
 #' hist(g1$q, breaks=100)
 #'@export
 
-gsea.render <- function (AGS, FGS , Lowercase = 1, ags.gene.col = 2, ags.group.col = 3, fgs.gene.col = 2, fgs.group.col = 3, echo=1, Ntotal = 20000, Parallelize=1) {
-if (echo>0) {print("Preparing input datasets:");}
+gsea.render <- function (AGS, FGS = "CAN_SIG_GO.34.txt", Lowercase = 1, ags.gene.col = 2, ags.group.col = 3, fgs.gene.col = 2, fgs.group.col = 3, echo=1, Ntotal = 20000, Parallelize=1) {
+	if (echo > 0) {
+		print("Preparing input datasets:");
+	}
 
-if (is.list(FGS)) {
-fgs.list <- FGS;
-} else {
-fgs.list <- import.gs(FGS, Lowercase=Lowercase, fgs.gene.col, fgs.group.col, gs.type = 'f') 
-if (echo>0) {print(paste("FGS: ", length(unique(unlist(fgs.list))), " genes in ", length(fgs.list), " groups.", sep = ""));} 
-}
+	if (is.list(FGS)) {
+		fgs.list <- FGS;
+	} else {
+		fgs.list <- import.gs(FGS, Lowercase=Lowercase, fgs.gene.col, fgs.group.col, gs.type = 'f') 
+		if (echo>0) {
+			print(paste("FGS: ", length(unique(unlist(fgs.list))), " genes in ", length(fgs.list), " groups.", sep = ""));
+		} 
+	}
 
-if (is.list(AGS)) {ags.list <- AGS;
-} else {
-ags.list <- import.gs(AGS, Lowercase=Lowercase, ags.gene.col, ags.group.col, gs.type = 'a')
-}
+	if (is.list(AGS)) {
+		ags.list <- AGS;
+	} else {
+		ags.list <- import.gs(AGS, Lowercase=Lowercase, ags.gene.col, ags.group.col, gs.type = 'a')
+	}
 
-#we make here an important assumption: the full set size of the cluster members ('the gene universe') is the number of distinct members of the  union {AGS, FGS}. Otherwise, one can submit a specified value of Ntotal.
-if (is.na(Ntotal) | is.null(Ntotal)) {
-Ntotal = length(unique(c(unlist(AGS), unlist(FGS))));
-} 
-if (echo>0) {
-print(paste("AGS: ",  length(unique(unlist(ags.list))), " genes in ", length(ags.list), " groups.", sep = ""));		
-}
-if (echo>0) {print("Calculating overlap statistics...");}
-Nov.par <- function(i, ags) {
-return(
-lapply(ags, 
-function (x) {
-y = fgs.list[[i]];
-Nol <- length(which(unlist(x) %in% unlist(y)));
-f1 <- fisher.test(matrix(c(Nol, length(x) - Nol, length(y) - Nol, Ntotal - length(x) - length(y) + Nol), nrow = 2));
-return(c(f1$p, Nol, f1$estimate));
-}
-));
-}
-if (Parallelize > 1) {
-l1 <- mclapply(names(fgs.list), Nov.par, ags.list, mc.cores = Parallelize);
-} else {
-l1 <- lapply(names(fgs.list), Nov.par, ags.list);
-}
-GSEA.ags_fgs <- array(unlist(l1), dim=c(3, length(ags.list), length(fgs.list)), dimnames=list(Stats=c("P", "N", "OR"), ags.names=names(ags.list), fgs.names=as.vector(names(fgs.list))));
-stats <- NULL;
-stats$n <-  t(as.matrix(GSEA.ags_fgs["N",,]));
-stats$estimate <- t(as.matrix(GSEA.ags_fgs["OR",,]));
-va = 'estimate'; 
-# Min = min(stats[[va]][which(!is.infinite(stats[[va]]))], na.rm=T) - 0;
-Max = max(stats[[va]][which(!is.infinite(stats[[va]]))], na.rm=T) + 1;
-# stats[[va]][which(is.infinite(stats[[va]]) & (stats[[va]] < 0))] = Min;
-stats[[va]][which(is.infinite(stats[[va]]) & (stats[[va]] > 0))] = Max;
+	#we make here an important assumption: the full set size of the cluster members ('the gene universe') is the number of distinct members of the  union {AGS, FGS}. Otherwise, one can submit a specified value of Ntotal.
+	if (is.na(Ntotal) | is.null(Ntotal)) {
+		Ntotal = length(unique(c(unlist(AGS), unlist(FGS))));
+	} 
+	if (echo > 0) {
+		print(paste("AGS: ",  length(unique(unlist(ags.list))), " genes in ", length(ags.list), " groups.", sep = ""));		
+	}
+	
+	if (echo > 0) {
+		print("Calculating overlap statistics...");
+	}
+	Nov.par <- function(i, ags) {
+		return(
+			lapply(ags, 
+				function (x) {
+					y = fgs.list[[i]];
+					Nol <- length(which(unlist(x) %in% unlist(y)));
+					f1 <- fisher.test(matrix(c(Nol, length(x) - Nol, length(y) - Nol, Ntotal - length(x) - length(y) + Nol), nrow = 2));
+					return(c(f1$p, Nol, f1$estimate));
+				}
+			)
+		);
+	}
+	if (Parallelize > 1) {
+		l1 <- mclapply(names(fgs.list), Nov.par, ags.list, mc.cores = Parallelize);
+	} else {
+		l1 <- lapply(names(fgs.list), Nov.par, ags.list);
+	}
+	GSEA.ags_fgs <- array(unlist(l1), dim=c(3, length(ags.list), length(fgs.list)), dimnames = list(Stats = c("P", "N", "OR"), ags.names = names(ags.list), fgs.names = as.vector(names(fgs.list))));
+	stats <- NULL;
+	stats$n <-  t(as.matrix(GSEA.ags_fgs["N",,]));
+	stats$estimate <- t(as.matrix(GSEA.ags_fgs["OR",,]));
+	va = 'estimate'; 
+	# Min = min(stats[[va]][which(!is.infinite(stats[[va]]))], na.rm=TRUE) - 0;
+	Max = max(stats[[va]][which(!is.infinite(stats[[va]]))], na.rm=TRUE) + 1;
+	# stats[[va]][which(is.infinite(stats[[va]]) & (stats[[va]] < 0))] = Min;
+	stats[[va]][which(is.infinite(stats[[va]]) & (stats[[va]] > 0))] = Max;
 
-stats$p <- t(as.matrix(GSEA.ags_fgs["P",,]));
-stats$q <- matrix(
-p.adjust(stats$p, method="BH"), 
-nrow = nrow(stats$p), ncol = ncol(stats$p), 
-byrow=FALSE);
-stats$q[which(stats$estimate < 1)] = 1;
+	stats$p <- t(as.matrix(GSEA.ags_fgs["P",,]));
+	stats$q <- matrix(
+		p.adjust(stats$p, method = "BH"), 
+		nrow = nrow(stats$p), ncol = ncol(stats$p), 
+		byrow = FALSE);
+	stats$q[which(stats$estimate < 1)] = 1;
 
-for (va in names(stats)) {
-if (length(ags.list) == 1) {
-stats[[va]] <- t(stats[[va]]);
-}
-rownames(stats[[va]]) <- dimnames(GSEA.ags_fgs)$fgs.names;
-colnames(stats[[va]]) <- dimnames(GSEA.ags_fgs)$ags.names;
-}
-return(stats);
+	for (va in names(stats)) {
+		if (length(ags.list) == 1) {
+			stats[[va]] <- t(stats[[va]]);
+		}
+		rownames(stats[[va]]) <- dimnames(GSEA.ags_fgs)$fgs.names;
+		colnames(stats[[va]]) <- dimnames(GSEA.ags_fgs)$ags.names;
+	}
+	return(stats);
 }

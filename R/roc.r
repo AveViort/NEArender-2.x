@@ -59,81 +59,97 @@
 #' @export
 
 
-roc <- function(tpvsfp, mode="roc", tpr.stop=1, fpr.stop=1, coff.z = 1.965, coff.fdr = 0.1, cex.main=1, cex.leg = 0.75, main=NA, use.lty=FALSE, print.stats=TRUE, sort_by_letter_and_remove=FALSE) {
-  if (mode(tpvsfp) != "list") {
-    print('Submitted first agrument is wrong. Should be either a single list with entries c("cross.z", "cutoffs", "fp", "tp", "ne", "nv") or a list of such lists...');
-    return();
-  }
-  
-  # if (suppressWarnings(all(sort(names(tpvsfp)) == c("cross.z", "cutoffs", "ne", "nv", "tp", "fp", "tn", "fn")))) {
-  if (!FALSE %in% (names(tpvsfp) %in% c("cross.z", "cutoffs", "ne", "nv", "tp", "fp", "tn", "fn"))) {
-    objs <- NULL; objs[["1"]]=tpvsfp;
-  } else {
-    objs=tpvsfp;
-  } 
-  Nets <- sort(names(objs));
-  
-  if (length(Nets) > 1 | Nets[1] != "1") {
-    Col <- rainbow(length(Nets)); names(Col) <- Nets;
-  } else {
-    Col <- NULL; Col["1"] <- c("black");
-  } 
-  Max.fp <- 0; Max.tp <- 0;
-  for (p1 in Nets) {
-    pred <- objs[[p1]];
-    Max.signif.n = max(pred$fp[[1]][which(pred$cutoffs[[1]] > coff.z)], na.rm=T);
-    if (Max.fp < Max.signif.n ) {Max.fp <- Max.signif.n;}
-    Max.signif.p = max(pred$tp[[1]][which(pred$cutoffs[[1]] > coff.z)], na.rm=T);
-    if (Max.tp < Max.signif.p ) {Max.tp <- Max.signif.p;}
-  }
-  if (mode == "roc") {
-    Xlim = c(0, Max.fp * fpr.stop); 
-    Ylim = c(0, Max.tp * tpr.stop);
-    Xlab = "False predictions";
-    Ylab = "True predictions";
-  } else {
-    Xlim = c(0, 1); 
-    Ylim = c(0, 1);
-    Xlab = 'Recall, TP / (TP + FN)';
-    Ylab = 'Precision, TP / (TP + FP)';
-  }
-  plot(1, 1, xlim=Xlim, ylim=Ylim,  
-       cex.main = cex.main, type="n", xlab=Xlab, ylab=Ylab, main=main);
-  
-  Lty = rep(1:4, times=length(Nets));
-  i = 1; Le <- NULL;
-  for (p1 in Nets) {
-    if (print.stats) {
-      Le = c(Le, paste(substr(p1, 1, 15), "; n(V)=", objs[[p1]]$nv, "; n(E)=", objs[[p1]]$ne, sep=""));
-      } else {
-      if (sort_by_letter_and_remove) {
-        Le = c(Le, paste(gsub("[A-Z]\\:", "", p1, fixed=F, ignore.case=T), sep=""));
-      } else {
-        Le = c(Le, paste(p1, sep=""));
-      }}
-    
-    pred <- objs[[p1]];
-    if (mode == "roc") {
-      pick <- which(pred$cutoffs[[1]] > coff.z);
-      X = pred$fp[[1]][pick];
-      Y = pred$tp[[1]][pick];
-    } else {
-      if (mode == "prc") {
-        X = pred$tp[[1]] / (pred$tp[[1]] + pred$fn[[1]]);
-        Y = pred$tp[[1]] / (pred$fp[[1]] + pred$tp[[1]]);
-      }
-      else {stop("Curve mode undefined...");}
-    }
-    points(X,Y, pch=".", type="l", col=Col[p1], lty=ifelse(use.lty, Lty[i], 1));
-    abline(0, 1,col = "gray60",lwd=0.5, lty=2);
-    Pos <- pred$cutoffs[[1]][which(pred$cutoffs[[1]] > pred$cross.z)];
-    points(
-      pred$fp[[1]][which((Pos - pred$cross.z) == min(Pos - pred$cross.z, na.rm=T))],
-      pred$tp[[1]][which((Pos - pred$cross.z) == min(Pos - pred$cross.z, na.rm=T))], 
-      pch="O", type="p", col=Col[p1]);
-    i = i + 1;
-  }
-  llist <- 1;
-  if (use.lty) {llist <- Lty[1:i];}
-  legend(x="bottomright", legend=Le, title=paste( "", sep=""), col=Col, bty="n", pch=15, lty=llist, cex=cex.leg);
+roc <- function(tpvsfp, # object of a special type; must contain "cross.z", "cutoffs", "ne", "nv", "tp", "fp", "tn", "fn"
+	mode = "roc", # either ROC curve or precision recall curve (mode='prc'), default: roc
+	tpr.stop = 1, # upper limit for the Y-axis (true positives), default: 1
+	fpr.stop = 1, # upper limit for the X-axis (false positives), default: 1
+	coff.z = 1.965, # the point where to stop the ROC curve (in order to disable, set coff.z to below the minimal possible level)
+	# coff.fdr = 0.1, # the point where to put the circle ('cross') at the ROC curve 
+	cex.main = 1, # font size for the main title
+	cex.leg = 0.75, # font size for the legend
+	main = NA, # title text, default: none
+	use.lty = FALSE, # if different line types should be used for the curves, useful when the number of curves is very big (>10)
+	print.stats = TRUE, # add N(edges) and N(vertices) to the legend lines; only works if non-empty $ne and $nv elements are submitted in tpvsfp
+	sort_by_letter_and_remove = FALSE # enable a specific sorting order
+) {
+	if (mode(tpvsfp) != "list") {
+		print('Submitted first agrument is wrong. Should be either a single list with entries c("cross.z", "cutoffs", "fp", "tp", "ne", "nv") or a list of such lists...');
+		return();
+	}
+
+	# if (suppressWarnings(all(sort(names(tpvsfp)) == c("cross.z", "cutoffs", "ne", "nv", "tp", "fp", "tn", "fn")))) {
+	if (!FALSE %in% (names(tpvsfp) %in% c("cross.z", "cutoffs", "ne", "nv", "tp", "fp", "tn", "fn"))) {
+		objs <- NULL; objs[["1"]]=tpvsfp;
+	} else {
+		objs=tpvsfp;
+	} 
+	Nets <- sort(names(objs));
+
+	if (length(Nets) > 1 | Nets[1] != "1") {
+		Col <- rainbow(length(Nets)); names(Col) <- Nets;
+	} else {
+		Col <- NULL; Col["1"] <- c("black");
+	} 
+	Max.fp <- 0; Max.tp <- 0;
+	for (p1 in Nets) {
+		pred <- objs[[p1]];
+		Max.signif.n = max(pred$fp[[1]][which(pred$cutoffs[[1]] > coff.z)], na.rm = TRUE);
+		if (Max.fp < Max.signif.n ) {Max.fp <- Max.signif.n;}
+		Max.signif.p = max(pred$tp[[1]][which(pred$cutoffs[[1]] > coff.z)], na.rm = TRUE);
+		if (Max.tp < Max.signif.p ) {Max.tp <- Max.signif.p;}
+	}
+	
+	if (mode == "roc") {
+		Xlim = c(0, Max.fp * fpr.stop); 
+		Ylim = c(0, Max.tp * tpr.stop);
+		Xlab = "False predictions";
+		Ylab = "True predictions";
+	} else {
+		Xlim = c(0, 1); 
+		Ylim = c(0, 1);
+		Xlab = 'Recall, TP / (TP + FN)';
+		Ylab = 'Precision, TP / (TP + FP)';
+	}
+
+	plot(1, 1, xlim=Xlim, ylim=Ylim, cex.main = cex.main, type = "n", xlab = Xlab, ylab = Ylab, main = main);
+	Lty = rep(1:4, times = length(Nets));
+	i = 1; Le <- NULL;
+	for (p1 in Nets) {
+		if (print.stats) {
+			# Le = c(Le, paste(substr(p1, 1, 15), "; n(V)=", sapply(objs, function (x) x$nv), "; n(E)=", sapply(objs, function (x) x$ne), sep=""));
+			Le = c(Le, paste(substr(p1, 1, 15), "; n(V)=", objs[[p1]]$nv, "; n(E)=", objs[[p1]]$ne, sep = ""));
+		} else {
+			if (sort_by_letter_and_remove) {
+				Le = c(Le, paste(gsub("[A-Z]\\:", "", p1, fixed = FALSE,  ignore.case = TRUE), sep = ""));
+			} else {
+				Le = c(Le, paste(p1, sep = ""));
+			}
+		}
+		pred <- objs[[p1]];
+	
+		if (mode == "roc") {
+			pick <- which(pred$cutoffs[[1]] > coff.z);
+			X = pred$fp[[1]][pick];
+			Y = pred$tp[[1]][pick];
+		} else {
+			if (mode == "prc") {
+				X = pred$tp[[1]] / (pred$tp[[1]] + pred$fn[[1]]);
+				Y = pred$tp[[1]] / (pred$fp[[1]] + pred$tp[[1]]);
+			} else {
+				stop("Curve mode undefined...");
+			}
+		}
+
+		points(X,Y, pch=".", type="l", col=Col[p1], lty=ifelse(use.lty, Lty[i], 1));
+		abline(0, 1,col = "gray60",lwd=0.5, lty=2);
+		Pos <- pred$cutoffs[[1]][which(pred$cutoffs[[1]] > pred$cross.z)];
+		points(
+			pred$fp[[1]][which((Pos - pred$cross.z) == min(Pos - pred$cross.z, na.rm = TRUE))],
+			pred$tp[[1]][which((Pos - pred$cross.z) == min(Pos - pred$cross.z, na.rm = TRUE))], 
+			pch = "O", type = "p", col = Col[p1]);
+		i = i + 1;
+	}
+	llist <- 1;
+	if (use.lty) {llist <- Lty[1:i];}
+	legend(x = "bottomright", legend = Le, title = paste( "", sep = ""), col = Col, bty = "n", pch = 15, lty = llist, cex = cex.leg);
 }

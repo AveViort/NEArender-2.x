@@ -22,43 +22,60 @@
 #' @importFrom utils read.table
 #' @export
 
-import.net <- function(tbl, Lowercase = 1, col.1 = 1, col.2 = 2, col.score = 3, min.score=NA, n.top=NA, echo = 1) {
-if (is.null(tbl)) {stop("No network file name given...");}
-if (!is.na(min.score) & col.score < 1) {stop("Edge score/weight column col.score and/or cut-off are undefined...");}
-if (!is.na(min.score) & !is.na(n.top)) {stop("Edge score/weight column col.score should be used either for filetering at min.score or for selectig n.top edges.\n\tDefining both min.score and n.top is not allowed...");}
-if (is.data.frame(tbl)){
-  net <- tbl
-} else {
-  net <- read.table(tbl, row.names = NULL, header = FALSE, sep = "\t", quote = "", dec = ".", na.strings = "", skip = 0, colClasses="character", comment.char = "");
-}
-if (is.null(net)) {stop(paste("Not a proper network file:", tbl, "...", sep=" "));}
-if (nrow(net) < 10) {stop(paste("Not a proper network file:", tbl, "...", sep=" "));}
-if (length(unique(net[,col.1])) < 2 & length(unique(net[,col.2])) < 2) {stop("Multiple node (gene) IDs are not found: check parameters 'col.1', 'col.2'... ");}
+import.net <- function(tbl, Lowercase = 1, col.1 = 1, col.2 = 2, col.score = 3, min.score = NA, n.top = NA, echo = 1) {
+	if (is.null(tbl)) {
+		stop("No network file name given...");
+	}
+	
+	if (!is.na(min.score) & col.score < 1) {
+		stop("Edge score/weight column col.score and/or cut-off are undefined...");
+	}
+	
+	if (!is.na(min.score) & !is.na(n.top)) {
+		stop("Edge score/weight column col.score should be used either for filetering at min.score or for selectig n.top edges.\n\tDefining both min.score and n.top is not allowed...");
+	}
+	
+	net <- read.table(tbl, row.names = NULL, header = FALSE, sep = "\t", quote = "", dec = ".", na.strings = "", skip = 0, colClasses = "character", comment.char = "");
+	if (is.null(net)) {
+		stop(paste("Not a proper network file:", tbl, "...", sep = " "));
+	}
+	
+	if (nrow(net) < 10) {
+		stop(paste("Not a proper network file:", tbl, "...", sep = " "));
+	}
+	
+	if (length(unique(net[,col.1])) < 2 & length(unique(net[,col.2])) < 2) {
+		stop("Multiple node (gene) IDs are not found: check parameters 'col.1', 'col.2'... ");
+	}
 
-if (Lowercase > 0 ) {
-for (i in c(col.1, col.2)) {
-net[,i] <- tolower(net[,i]);
-}}
-net<-net[which(net[,col.1] != net[,col.2]),];
-net <- unique(net); Net <- NULL; Net$links <- NULL;
-if (col.score > 0) {
-if (!is.na(min.score)) {
-net <- net[which(net[,col.score] >= min.score),];
-} else {
-if (!is.na(n.top)) {
-net <- net[order(net[,col.score], decreasing=T),][1:n.top,];
-}}}
-t1 <- c(
-tapply(net[,col.1], factor(net[,col.2]), paste),
-tapply(net[,col.2], factor(net[,col.1]), paste)
-);
-Net$links <- tapply(t1, factor(names(t1)), function (x) unique(c(x, recursive = T)));
-for (i  in names(Net$links)) {
-Net$links[[i]] <- unique(Net$links[[i]]);
-}
-Net$Ntotal <- sum(sapply(Net$links, length))/2;
-if (echo>0) {
-print(paste("Network of ", Net$Ntotal, " edges between ", length(Net$links), " nodes...", sep = ""));
-}
-return(Net)
+	if (Lowercase > 0 ) { 
+		for (i in c(col.1, col.2)) {
+			net[,i] <- tolower(net[,i]);
+		}
+	}
+	
+	net <- net[which(net[,col.1] != net[,col.2]),];
+	net <- unique(net); Net <- NULL; Net$links <- NULL;
+	if (col.score > 0) {
+		if (!is.na(min.score)) {
+			net <- net[which(net[,col.score] >= min.score),];
+		} else {
+			if (!is.na(n.top)) {
+				net <- net[order(net[,col.score], decreasing = TRUE),][1:n.top,];
+			}
+		}
+	}
+	t1 <- c(
+		tapply(net[,col.1], factor(net[,col.2]), paste), 
+		tapply(net[,col.2], factor(net[,col.1]), paste)
+	);
+	Net$links <- tapply(t1, factor(names(t1)), function (x) unique(c(x, recursive = TRUE)));
+	for (i  in names(Net$links)) {
+		Net$links[[i]] <- unique(Net$links[[i]]);
+	}
+	Net$Ntotal <- sum(sapply(Net$links, length))/2;
+	if (echo>0) {
+		print(paste("Network of ", Net$Ntotal, " edges between ", length(Net$links), " nodes...", sep = ""));
+	}		
+	return(Net)
 }

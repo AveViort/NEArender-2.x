@@ -18,34 +18,44 @@
 #' @export
 
 
-mutations2ags  <- function(MUT, col.mask=NA, namesFromColumn=NA, permute=FALSE
-# , Lowercase = 1
+mutations2ags  <- function(MUT, col.mask = NA, namesFromColumn = NA, permute = FALSE
+	# , Lowercase = 1
 ) {
-if (is.null(MUT)) {stop("Not enough parameters...");}
-mgs.list <- NULL;
+	if (is.null(MUT)) {
+		stop("Not enough parameters...");
+	}
+	mgs.list <- NULL;
 
-if (is.na(namesFromColumn)) {m1 <- MUT;}
-else {m1 <- MUT[,(namesFromColumn+1):ncol(MUT)];}
-if (!is.na(col.mask)) {m1 <- m1[,colnames(m1)[grep(col.mask,colnames(m1))]];}
-mgs.list <- apply(m1, 2, function (x) unique(tolower(names(x))[which(!is.na(x) )]));
-
-if (permute) {mgs.list <- permute.gs(mgs.list);}
-
-return(mgs.list);
+	if (is.na(namesFromColumn)) {
+		m1 <- MUT;
+	} else {
+		m1 <- MUT[,(namesFromColumn+1):ncol(MUT)];
+	}
+	
+	if (!is.na(col.mask)) {
+		m1 <- m1[,colnames(m1)[grep(col.mask, colnames(m1), fixed=FALSE)]];
+	}
+	
+	mgs.list <- apply(m1, 2, function (x) unique(tolower(names(x))[which(!is.na(x) & x != 0)]));
+	if (permute) {
+		mgs.list <- permute.gs(mgs.list);
+	}  
+	return(mgs.list);
 }
 
-permute.gs <- function (GS, Plot=FALSE) {
-pmgs <- as.list(NULL); mmgs <- unlist(GS);
-fmgs <- table(mmgs) / length(GS); # fmgs <- fmgs / sum(fmgs);
-for (m in names(GS)) {
-pmgs[[m]] <- sample(x = names(fmgs), size = length(GS[[m]]), replace = FALSE, prob = fmgs);
-}
-print("Gene set permutation done.");
-if (Plot) {
-plot(table(unlist(GS))[names(fmgs)], table(unlist(pmgs))[names(fmgs)], xlab="Original", ylab="Permuted", main="#Samples / gene");
-abline(0,1,lty=2, col="grey");
-plot(sapply(GS, length)[names(GS)], sapply(pmgs, length)[names(GS)], xlab="Original", ylab="Permuted", main="#Genes / sample")
-abline(0,1,lty=2, col="grey");
-}
-return(pmgs);
+permute.gs <- function (GS, Plot = FALSE) {
+	pmgs <- as.list(NULL); mmgs <- unlist(GS);
+	fmgs <- table(mmgs) / length(GS); # fmgs <- fmgs / sum(fmgs);
+	for (m in names(GS)) {
+		pmgs[[m]] <- sample(x = names(fmgs), size = length(GS[[m]]), replace = FALSE, prob = fmgs);
+	}
+	print("Gene set permutation done.");
+
+	if (Plot) {
+		plot(table(unlist(GS))[names(fmgs)], table(unlist(pmgs))[names(fmgs)], xlab = "Original", ylab = "Permuted", main = "#Samples / gene");
+		abline(0,1,lty = 2, col = "grey");
+		plot(sapply(GS, length)[names(GS)], sapply(pmgs, length)[names(GS)], xlab = "Original", ylab = "Permuted", main = "#Genes / sample");
+		abline(0,1,lty=2, col="grey");
+	}
+	return(pmgs);
 }

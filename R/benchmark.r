@@ -64,49 +64,66 @@
 #' @export
 
 
-benchmark <- function(NET, GS, gs.gene.col = 2, gs.group.col = 3, net.gene1.col = 1, net.gene2.col = 2, echo=1, graph=FALSE, 
-na.replace = 0, mask = '.', minN = 0, coff.z = 1.965, coff.fdr = 0.1, 
-Parallelize=1) {
-  if (is.list(NET)) {net.list <- NET} else {net.list <- import.net(NET, Lowercase=1, col.1 = net.gene1.col, col.2 = net.gene2.col);}
-  fgs.list <- as_genes_fgs(net.list);
-  if (is.list(GS)) {
-    ags.list <- GS;
-  } else {
-    ags.list <- import.gs (GS, Lowercase=1, col.gene = gs.gene.col, col.set = gs.group.col, gs.type = 'a');
-  }
-  n1  <- nea.render(AGS=ags.list, FGS=fgs.list, NET = net.list, Lowercase = 1, echo=echo, graph=FALSE, na.replace = na.replace, Parallelize=Parallelize);
-  gc();
-  l1 <- lapply(net.list$links, function (x) round(log2(length(x))));
-  l0 <- unlist(l1);
-  connectivity <- NULL;
-  for (bin in unique(l0)) {
-    All <- names(l0)[which(l0 == bin)]; 
-    connectivity[[as.character(bin)]] <- All # [which(All %in% pw.members)]; 
-  }
-  zreal = znull =
-    as.vector(rep(NA, times=length(which(unlist(ags.list) %in% rownames(n1$z)))))
-  Agss = names(ags.list)[grep(mask, names(ags.list), fixed=FALSE)];
-  i = 0; j = 0;
-  print("Matching each positive test node with a negative one, regarding node connectivity: ");
-  for (ags in Agss) {
-    mem <- ags.list[[ags]][which(ags.list[[ags]] %in% rownames(n1$z))]
-    
-    if (length(mem) > 0) {
-      vec <- n1$z[mem, ags];
-      zreal[(j+1):(j+length(vec))] <- vec;
-      j = j + length(vec);
-      for (ge in mem) {
-        i = i + 1;
-        if (grepl("00$", as.character(i), fixed=F)) {print(i);}
-        bin <- as.character(round(log2(length(net.list$links[[ge]]))))
-        znull[i] <- n1$z[sample(connectivity[[bin]],1), ags]; 
-      }}}
-  n1$q[which(n1$z < 0)] = 1;
-  cross.z = n1$z[which(abs(n1$q - coff.fdr) == min(abs(n1$q - coff.fdr), na.rm=TRUE))][1];
-  p0 <- prediction(c(znull, zreal), c(rep(0, times=length(znull)), rep(1, times=length(zreal))));
-  pred<-list(tp=p0@tp, fp=p0@fp, tn=p0@tn, fn=p0@fn, cutoffs=p0@cutoffs, cross.z=cross.z, nv=net.list$Ntotal, ne=length(net.list$links))
-  if (graph) {
-    roc(pred, coff.z = coff.z)#, coff.fdr = coff.fdr);
-  }
-  return(pred);
+benchmark <- function(NET = "merged6_and_wir1_HC2", GS = "CAN_SIG_GO.34.txt", gs.gene.col = 2, gs.group.col = 3, net.gene1.col = 1, 
+	net.gene2.col = 2, echo=1, graph=FALSE, na.replace = 0, mask = '.', minN = 0, coff.z = 1.965, coff.fdr = 0.1, Parallelize=1) 
+{
+	if (is.list(NET)) {
+		net.list <- NET
+	} else {
+		net.list <- import.net(NET, Lowercase=1, col.1 = net.gene1.col, col.2 = net.gene2.col);
+	}
+	fgs.list <- as_genes_fgs(net.list);
+	if (is.list(GS)) {
+		ags.list <- GS;
+	} else {
+		ags.list <- import.gs (GS, Lowercase=1, col.gene = gs.gene.col, col.set = gs.group.col, gs.type = 'a');
+	}
+	n1  <- nea.render(AGS=ags.list, FGS=fgs.list, NET = net.list, Lowercase = 1, echo=echo, na.replace = na.replace, Parallelize=Parallelize);
+	# save(n1, file="nea4ROCs.RData");
+	gc();
+	l1 <- lapply(net.list$links, function (x) round(log2(length(x))));
+	l0 <- unlist(l1);
+	connectivity <- NULL;
+	# pw.members <- unique(unlist(ags.list));
+	for (bin in unique(l0)) {
+		All <- names(l0)[which(l0 == bin)]; 
+		connectivity[[as.character(bin)]] <- All # [which(All %in% pw.members)]; 
+	}
+	zreal = znull = as.vector(rep(NA, times=length(which(unlist(ags.list) %in% rownames(n1$z)))))
+	Agss = names(ags.list)[grep(mask, names(ags.list), fixed=FALSE)];
+	i = 0; j = 0;
+	print("Matching each positive test node with a negative one, regarding node connectivity: ");
+	for (ags in Agss) {
+		mem <- ags.list[[ags]][which(ags.list[[ags]] %in% rownames(n1$z))]
+		if (length(mem) > 0) {
+			vec <- n1$z[mem, ags];
+			# zreal <- c(zreal, vec); 
+			zreal[(j+1):(j+length(vec))] <- vec;
+			# names(zreal)[(j+1):(j+length(vec))] <- mem;
+			j = j + length(vec);
+			for (ge in mem) {
+				i = i + 1;
+				if (grepl("00$", as.character(i), fixed=FALSE)) {print(i);}
+				bin <- as.character(round(log2(length(net.list$links[[ge]]))))
+				# znull <- c(znull, n1$z[sample(connectivity[[bin]],1), ags]); 
+				znull[i] <- n1$z[sample(connectivity[[bin]],1), ags]; 
+			}
+		}
+	}
+	n1$q[which(n1$z < 0)] = 1;
+	cross.z = n1$z[which(abs(n1$q - coff.fdr) == min(abs(n1$q - coff.fdr), na.rm = TRUE))][1];
+
+	print(table(is.na(zreal)))
+	print(table(is.na(znull)))
+	print(znull)
+	print(zreal)
+
+	p0 <- prediction(c(znull, zreal), c(rep(0, times = length(znull)), rep(1, times = length(zreal))));
+
+
+	pred<-list(tp=p0@tp, fp=p0@fp, tn=p0@tn, fn=p0@fn, cutoffs=p0@cutoffs, cross.z=cross.z, nv=net.list$Ntotal, ne=length(net.list$links))
+	if (graph) {
+		roc(pred, coff.z = coff.z); #, coff.fdr = coff.fdr);
+	}
+	return(pred);
 }

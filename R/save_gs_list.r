@@ -19,10 +19,20 @@
 #' @export
 
 
-save_gs_list <- function(gs.list, File = "gs.list.groups") {
-  t1 <- NULL;
-  for (gs in names(gs.list)) {
-    t1 <- rbind(t1, cbind(gs.list[[gs]], gs));
-  }
-  write.table(t1, file=File, append = FALSE, quote = FALSE, sep = "\t", eol = "\n", na = "NA", dec = ".", row.names = FALSE,  col.names = FALSE)
+save.gs.list <- function(gs.list, ID = "gs", attributes = FALSE, shape = NA) { 
+	t1 <- NULL;
+	for (gs in names(gs.list)) {
+		if (attributes) {
+			Values <- gs.list[[gs]];
+			# shape = "diamond";
+			t1 <- rbind(t1, cbind(names(Values), 
+				sign(Values) * Values / ifelse(Values >= 0, max(Values, na.rm = TRUE), min(Values, na.rm = TRUE)),
+				shape,
+				gs)); 
+		} else {
+			t1 <- rbind(t1, cbind(gs.list[[gs]], gs));
+		}
+	}
+	write.table(t1, file = paste("NEA", ID, ifelse(attributes, 'attributes', ''), "groups", sep = "."), append = FALSE, quote = FALSE, 
+		sep = "\t", eol = "\n", na = "NA", dec = ".", row.names = FALSE,  col.names = FALSE);
 }

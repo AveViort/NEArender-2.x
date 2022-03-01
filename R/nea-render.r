@@ -47,123 +47,157 @@
 #' hist(n1$q, breaks=100)
 #' @export
 
-nea.render <- function (AGS, FGS, NET,  Lowercase = 1, ags.gene.col = 2, ags.group.col = 3, fgs.gene.col = 2, fgs.group.col = 3, net.gene1.col = 1, net.gene2.col = 2, echo = 1, graph = FALSE, na.replace = 0, members=FALSE, digitalize = TRUE, Parallelize=1) {
-
-if (!is.na(na.replace) & !is.numeric(na.replace)) {stop("Parameter 'na.replace' should contain a numeric value or NA...");}
-if (echo>0) {print("Preparing input datasets:");}
-if (is.list(NET)) {net.list <- NET} else {net.list <- import.net(NET, Lowercase=Lowercase, net.gene1.col, net.gene2.col)}
-if (echo>0) {print(paste("Network: ",  length(net.list$links), " genes/proteins.", sep = ""));}
-if (is.list(FGS)) {
-fgs.list <- FGS;
-} else {
-if (FGS == "nw_genes") {
-fgs.list <- as_genes_fgs(net.list);
-if (echo>0) {print(paste("FGS: ",  length(unique(unlist(fgs.list))), " genes in as FGS groups.", sep = ""));}
-} else {
-fgs.list <- import.gs(FGS, Lowercase=Lowercase, fgs.gene.col, fgs.group.col, gs.type = 'f');
-}}
-if (echo>0) {
-print(paste("FGS: ", length(unique(unlist(fgs.list))), " genes in ", length(fgs.list), " groups.", sep = ""));
-}
+nea.render <- function (AGS, FGS, NET,  Lowercase = 1, ags.gene.col = 2, ags.group.col = 3, fgs.gene.col = 2, fgs.group.col = 3, net.gene1.col = 1, net.gene2.col = 2, echo = 1, 
+	#graph = FALSE, 
+	na.replace = 0, members = FALSE, digitalize = TRUE, Parallelize = 1, diff.enr = FALSE, save.ags = FALSE, save.fgs = FALSE, save.net = FALSE) {
 
 
-if (is.list(AGS)) {
-ags.list <- AGS;
-} else {
-ags.list <- import.gs(AGS, Lowercase=Lowercase, ags.gene.col, ags.group.col, gs.type = 'a');
-}
-if (echo>0) {
-print(paste("AGS: ",  length(unique(unlist(ags.list))), " genes in ", length(ags.list), " groups...", sep = ""));
-print("Calculating N links expected by chance...");
-}
+	if (!is.na(na.replace) & !is.numeric(na.replace)) {
+		stop("Parameter 'na.replace' should contain a numeric value or NA...");
+	}
+	
+	if (echo>0) {
+		print("Preparing input datasets:");
+	}
+	
+	if (is.list(NET)) {net.list <- NET} else {
+		net.list <- import.net(NET, Lowercase = Lowercase, net.gene1.col, net.gene2.col);
+	}
+	
+	if (echo>0) {
+		print(paste("Network: ", length(net.list$links), " genes/proteins.", sep = ""));
+	}
+	
+	if (is.list(FGS)) {
+		fgs.list <- FGS;
+	} else {
+		if (FGS == "nw_genes") {
+			fgs.list <- as_genes_fgs(net.list);
+			if (echo>0) {
+				print(paste("FGS: ",  length(unique(unlist(fgs.list))), " genes in as FGS groups.", sep = ""));
+			}
+		} else {
+			fgs.list <- import.gs(FGS, Lowercase = Lowercase, fgs.gene.col, fgs.group.col, gs.type = 'f');
+		}
+	}
+	if (echo>0) {
+		print(paste("FGS: ", length(unique(unlist(fgs.list))), " genes in ", length(fgs.list), " groups.", sep = ""));
+	}
 
-stats <- NULL;
+	if (is.list(AGS)) {
+		ags.list <- AGS;
+	} else {
+		ags.list <- import.gs(AGS, Lowercase = Lowercase, ags.gene.col, ags.group.col, gs.type = 'a');
+	}
+	if (echo>0) {
+		print(paste("AGS: ",  length(unique(unlist(ags.list))), " genes in ", length(ags.list), " groups...", sep = ""));
+		print("Calculating N links expected by chance...");
+	}
 
-if (members) {
-Members.in <- function(i, gs1, gs2) {
-return(sapply(gs1,
-function (x) {
-aa = unique(unlist(net.list$links[x]));
-return(paste(gs2[[i]][which(gs2[[i]] %in% aa)], collapse=", "));
-}));
-}
+	stats <- NULL;
+	if (members) {
+		Members.in <- function(i, gs1, gs2) {
+			return(sapply(gs1,
+				function (x) {
+					aa = unique(unlist(net.list$links[x]));
+					return(paste(gs2[[i]][which(gs2[[i]] %in% aa)], collapse = ", "));
+				}
+			));
+		}
 
-if (echo>0) {print("Enumerating connected nodes:");} #CAN BE OPTIMIZED FURTHER FOR FGS="nw_genes"...
-for (gg in c("ags", "fgs")) {
-print(paste(toupper(gg), "...", sep=""));
-if (gg == "fgs") {
-list1 <- fgs.list; list2 <- ags.list;
-} else {
-list1 <- ags.list; list2 <- fgs.list;
-}
-if (Parallelize > 1)  {
-print(system.time(l0 <- mclapply(names(list1), Members.in, list2, list1, mc.cores = Parallelize)));
-} else {
-print(system.time(l0 <- lapply(names(list1), Members.in, list2, list1)));
-}
-ele <- paste("members", gg, sep=".");
-stats[[ele]] <- matrix(unlist(l0), nrow = length(list1), ncol = length(list2), dimnames = list(names(list1), names(list2)), byrow=T);
-}
-}
+		if (echo>0) {print("Enumerating connected nodes:");} #CAN BE OPTIMIZED FURTHER FOR FGS="nw_genes"...
+		for (gg in c("ags", "fgs")) {
+			print(paste(toupper(gg), "...", sep = ""));
+			if (gg == "fgs") {
+				list1 <- fgs.list; list2 <- ags.list;
+			} else {
+				list1 <- ags.list; list2 <- fgs.list;
+			}
+			if (Parallelize > 1)  {
+				print(system.time(l0 <- mclapply(names(list1), Members.in, list2, list1, mc.cores = Parallelize)));
+			} else {
+				print(system.time(l0 <- lapply(names(list1), Members.in, list2, list1)));
+			}
+			ele <- paste("members", gg, sep=".");
+			# return(l0);
+			stats[[ele]] <- matrix(unlist(l0), nrow = length(list1), ncol = length(list2), dimnames = list(names(list1), names(list2)), byrow = TRUE);
+		}
+	}
+	if (save.ags) { stats$ags <- ags.list;}
+	if (save.fgs) { stats$fgs <- fgs.list;}
+	if (save.net) { stats$net <- net.list;}
+	# print(lapply(stats$fgs, length));print(lapply(stats$ags, length));
 
-if (digitalize) {
-print("Rendering integer IDs...");
-print(system.time(mapped <- char2int.fast(net.list, ags.list, fgs.list, Parallelize=Parallelize)));
-net.list$links <- mapped$net;
-ags.list <- mapped$gs[["a"]];
-fgs.list <- mapped$gs[["b"]];
-}
-net.list$cumulativeDegrees$AGS <- sapply(ags.list, FUN=function(x) length(unlist(net.list$links[unlist(x)])));
-net.list$cumulativeDegrees$FGS <- sapply(fgs.list, FUN=function(x) length(unlist(net.list$links[unlist(x)])));
-N.ags_fgs.expected <- outer(net.list$cumulativeDegrees$FGS, net.list$cumulativeDegrees$AGS , "*") / (2 * net.list$Ntotal);
+	if (digitalize) {
+		print("Rendering integer IDs...");
+		print(system.time(mapped <- char2int(net.list, ags.list, fgs.list, Parallelize = Parallelize)));
+		net.list$links <- mapped$net;
+		ags.list <- mapped$gs[["a"]];
+		fgs.list <- mapped$gs[["b"]];
+	}
 
-Nin <- function(i, ags) {
-return(lapply(ags, function (x) length(which(unlist(net.list$links[unlist(x)]) %in% unlist(unlist(fgs.list[[i]]))))));
-}
+	# if (!diff.enr) {return("Inside!");}
+	if (diff.enr) {
+		stats$d <- diff.enrichment(UNI=NA, Nperm = 10, AGS = ags.list, FGS = fgs.list, NET = net.list, mode = "nea", members = FALSE, Parallelize = Parallelize, diff.enr = FALSE);
+	}
 
+	# net.list$cumulativeDegrees$FRL <- sapply(frl.list, FUN=function(x) length(unlist(net.list$links[unlist(x)])));
+	net.list$cumulativeDegrees$AGS <- sapply(ags.list, FUN = function(x) length(unlist(net.list$links[unlist(x)])));
+	net.list$cumulativeDegrees$FGS <- sapply(fgs.list, FUN=function(x) length(unlist(net.list$links[unlist(x)])));
+	N.ags_fgs.expected <- outer(net.list$cumulativeDegrees$FGS, net.list$cumulativeDegrees$AGS, "*") / (2 * net.list$Ntotal);
 
+	Nin <- function(i, ags) {
+		return(lapply(ags, function (x) length(which(unlist(net.list$links[unlist(x)]) %in% unlist(unlist(fgs.list[[i]]))))));
+	}
 
-if (echo>0) {print("Counting actual links...");}
-if (Parallelize > 1)  {
-print(system.time(l1 <- mclapply(names(fgs.list), Nin, ags.list, mc.cores = Parallelize)));
-} else {
-print(system.time(l1 <- lapply(names(fgs.list), Nin, ags.list)));
-}
+	if (echo>0) {print("Counting actual links...");}
+	if (Parallelize > 1)  {
+		print(system.time(l1 <- mclapply(names(fgs.list), Nin, ags.list, mc.cores = Parallelize)));
+		# cl <- makeCluster(Parallelize, outFile = "/home/proj/func/Projects/cl_res.log")
+		# l1 <- parSapply(cl, names(fgs.list), Nin, ags.list);
+		# stopCluster(cl);
+	} else {
+		print(system.time(l1 <- lapply(names(fgs.list), Nin, ags.list)));
+	}
 
-N.ags_fgs.actual <- matrix(unlist(l1), nrow = length(fgs.list), ncol = length(ags.list), dimnames = list(names(fgs.list), names(ags.list)), byrow=T);
-N.ags_fgs.actual[which(N.ags_fgs.actual == 0)] = na.replace;
-if (echo>0) {print("Calculating statistics...");}
-chi = (
-((N.ags_fgs.actual - N.ags_fgs.expected) ** 2) / N.ags_fgs.expected +
-(((net.list$Ntotal - N.ags_fgs.actual) - (net.list$Ntotal - N.ags_fgs.expected)) ** 2) /
-(net.list$Ntotal - N.ags_fgs.expected));
-#############################################################
-#############################################################
-#############################################################
-p.chi <- pchisq(chi, df=1, log.p = FALSE, lower.tail = FALSE);# - log(2)
-Z <- qnorm(p.chi/2, lower.tail = FALSE)
-
-Depleted <- which(sign(N.ags_fgs.actual  - N.ags_fgs.expected) < 0);
-Z[Depleted] = -1 * abs(Z[Depleted]); #all depletion cases should produce negative Z values!
-Z[which(is.nan(Z))] <- NA;
-stats$cumulativeDegrees <- net.list$cumulativeDegrees;
-stats$n.actual <- N.ags_fgs.actual;
-stats$n.expected <- N.ags_fgs.expected;
-stats$chi <- chi;
-va = 'z'; stats[[va]] <- Z;
-Min = min(stats[[va]][which(!is.infinite(stats[[va]]))], na.rm=T) - 1;
-Max = max(stats[[va]][which(!is.infinite(stats[[va]]))], na.rm=T) + 1;
-stats[[va]][which(is.infinite(stats[[va]]) & (stats[[va]] < 0))] = Min;
-stats[[va]][which(is.infinite(stats[[va]]) & (stats[[va]] > 0))] = Max;
-# stats$p <- 10 ^ p.chi;
-stats$p <- p.chi;
-stats$q <- matrix(
-p.adjust(stats$p, method="BH"),
-nrow = nrow(stats$p), ncol = ncol(stats$p),
-dimnames = list(rownames(stats$p), colnames(stats$p)),
-byrow=FALSE);
-stats$q[which(stats$z < 0)] = 1;
-if (graph) {set.heat(ags.list,fgs.list,stats$z)}
-if (echo>0) {print("Done.");}
-return(stats);
+	if (length(unlist(l1)) != length(fgs.list) * length(ags.list)) {
+		return(l1);
+		stop(paste0("Unequal: ", table(unlist(lapply(l1, is.null)))));
+	} 
+	N.ags_fgs.actual <- matrix(unlist(l1), nrow = length(fgs.list), ncol = length(ags.list), dimnames = list(names(fgs.list), names(ags.list)), byrow=TRUE);
+	N.ags_fgs.actual[which(N.ags_fgs.actual == 0)] = na.replace;
+	
+	if (echo>0) {print("Calculating statistics...");}
+	chi = (
+		((N.ags_fgs.actual - N.ags_fgs.expected) ** 2) / N.ags_fgs.expected +
+		(((net.list$Ntotal - N.ags_fgs.actual) - (net.list$Ntotal - N.ags_fgs.expected)) ** 2) /
+		(net.list$Ntotal - N.ags_fgs.expected));
+	#############################################################
+	p.chi <- pchisq(chi, df=1, log.p = FALSE, lower.tail = FALSE);# - log(2)
+	Z <- qnorm(p.chi/2, lower.tail = FALSE)
+	Depleted <- which(sign(N.ags_fgs.actual  - N.ags_fgs.expected) < 0);
+	Z[Depleted] = -1 * abs(Z[Depleted]); #all depletion cases should produce negative Z values!
+	Z[which(is.nan(Z))] <- NA;
+	stats$cumulativeDegrees <- net.list$cumulativeDegrees;
+	stats$n.actual <- N.ags_fgs.actual;
+	stats$n.expected <- N.ags_fgs.expected;
+	stats$chi <- chi;
+	va = 'z'; stats[[va]] <- Z;
+	Min = min(stats[[va]][which(!is.infinite(stats[[va]]))], na.rm = TRUE) - 1;
+	if (!is.infinite(Min)) {stats[[va]][which(is.infinite(stats[[va]]) & (stats[[va]] < 0))] = Min;}
+	Max = max(stats[[va]][which(!is.infinite(stats[[va]]))], na.rm=TRUE) + 1;
+	if (!is.infinite(Max)) {stats[[va]][which(is.infinite(stats[[va]]) & (stats[[va]] > 0))] = Max;}
+	stats[[va]][which(is.infinite(stats[[va]]) & (stats[[va]] < 0))] = Min;
+	stats[[va]][which(is.infinite(stats[[va]]) & (stats[[va]] > 0))] = Max;
+	# stats$p <- 10 ^ p.chi;
+	stats$p <- p.chi;
+	stats$q <- matrix(
+		p.adjust(stats$p, method="BH"),
+		nrow = nrow(stats$p), ncol = ncol(stats$p),
+		dimnames = list(rownames(stats$p), colnames(stats$p)),
+		byrow = FALSE);
+	stats$q[which(stats$z < 0)] = 1;
+	#if (graph) {set.heat(ags.list,fgs.list,stats$z)}
+	if (echo>0) {print("Done.");}
+	return(stats);
 }

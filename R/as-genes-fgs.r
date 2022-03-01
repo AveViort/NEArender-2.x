@@ -13,9 +13,17 @@
 #' @export
 
 as_genes_fgs <- function(Net.list, Lowercase = 1) {
-if (is.null(Net.list)) {stop("No list given...");}
-if (Lowercase > 0) {n1 <- tolower(names(Net.list$links));} else {n1 <- names(Net.list$links);}
-fgs.list 	<- as.list(n1);
-names(fgs.list) <- n1;
-return(fgs.list);
+	if (is.null(Net.list)) {
+		stop("No list given...");
+	}
+	
+	if (Lowercase > 0) {
+		n1 <- tolower(names(Net.list$links));
+	} else {
+		n1 <- names(Net.list$links);
+	}
+	
+	fgs.list <- as.list(n1);
+	names(fgs.list) <- n1;
+	return(fgs.list);
 }
