@@ -1,0 +1,1089 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={NEArender},
+            pdfauthor={Ashwini Jeggari \& Andrey Alexeyenko},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+  \title{NEArender}
+  \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+  \author{Ashwini Jeggari \& Andrey Alexeyenko}
+  \preauthor{\centering\large\emph}
+  \postauthor{\par}
+  \predate{\centering\large\emph}
+  \postdate{\par}
+  \date{3/19/2018}
+
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(NEArender)}
+\KeywordTok{library}\NormalTok{(data.table)}
+\KeywordTok{library}\NormalTok{(graphics)}
+\KeywordTok{library}\NormalTok{(utils)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Overview}\label{overview}
+
+Package \textbf{NEArender} is created to provide a faster, less biased,
+and more convenient procedure for enrichment analysis and rendering the
+original data into a pathway space. The pathway scores are calculated
+with a fast algorithm of the network enrichment analysis (NEA).
+\textbf{NEArender} possesses both core and ancillary functionality for
+NEA. The documentation below describes the following:
+
+\begin{itemize}
+\item
+  \protect\hyperlink{test1}{General workflow}
+\item
+  \protect\hyperlink{test3}{Brief description of NEA and its functions}
+\item
+  \protect\hyperlink{test2}{Included Datasets}
+\item
+  \protect\hyperlink{test4}{Functions usage and examples}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \protect\hyperlink{ags}{Preparing AGS file}
+  \item
+    \protect\hyperlink{fgs}{Preparing FGS file}
+  \item
+    \protect\hyperlink{net}{Preparing NET file}
+  \item
+    \protect\hyperlink{misc}{Miscellaneous functions}
+  \end{itemize}
+\item
+  \protect\hyperlink{nea-run}{Network Enrichment Analysis}
+\item
+  \protect\hyperlink{gsea-run}{Network-free Gene-Set Enrichment
+  Analysis}
+\item
+  \protect\hyperlink{bor}{Benchmarking and ROC curves}
+\item
+  \protect\hyperlink{connect}{Estimating topological properties of used
+  networks}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \protect\hyperlink{sfp}{Scale-free property}
+  \item
+    \protect\hyperlink{sot}{Second order topology}
+  \end{itemize}
+\end{itemize}
+
+\pagebreak
+
+\hypertarget{test1}{\section{General workflow}\label{test1}}
+
+\begin{figure}
+\centering
+\includegraphics{system.file("extdata","img","aa.png",package="NEArender")}
+\caption{Implementation of NEArender \label{figlab0}}
+\end{figure}
+
+\hypertarget{test3}{\section{Inputs}\label{test3}}
+
+The three essential input components are:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Altered gene set (AGS)}: a user-defined gene set that
+  represents an experimental result, a patient-specific sample, a
+  biological hypothesis etc.
+\item
+  \textbf{Functional gene set (FGS)}: a known or a hypothetical set of
+  genes with a common, well defined biological or molecular function: a
+  pathway, an ontology term, a biological process etc.
+\item
+  \textbf{Global network of functional coupling (NET)}: a graph where
+  edges (functional links) represent arbitrarily defined
+  (e.g.~experimentally verified, literature derived, or computationally
+  inferred) relations between gene nodes. In practice, the graph is
+  fully defined with the list of gene pairs representing edges. Edge
+  weights and directions are ignored.
+\end{enumerate}
+
+\emph{Note: The term ``gene'' is used here as a logical proxy for a
+range of functional components of a biological network, such as genomic
+regions that encode proteins/microRNAs/enhancers/protein molecules. This
+imposes the practical limitations:}
+
+\emph{1. Identifiers used in the AGS, FGS, and NET inputs should belong
+to the same name space (most desirably gene symbols).}
+
+\emph{2. The parametric algorithm of enrichment evaluation used in this
+package would be unbiased only in scale-free networks, i.e.~where node
+connectivity values follow the power law distribution
+(\href{http://www.nature.com/nrg/journal/v5/n2/full/nrg1272.html}{Albert-László
+Barabási et al., 2004}). This is not the case in networks that are
+artificially constructed from e.g.~ChIP-seq based collections of
+transcription factor binding events
+(\href{http://www.ncbi.nlm.nih.gov/pubmed/22900683}{Bovolenta LA et al.,
+2012}) or from computationally predicted microRNA-transcript targeting
+data (\href{http://www.ncbi.nlm.nih.gov/pubmed/16381832}{Griffiths-Jones
+S et al., 2006}). If such network or a network component should be
+included, we recommend employing software that involves network
+permutation tests, i.e.~network randomization
+(\href{http://www.ncbi.nlm.nih.gov/pubmed/22966941}{Alexeyenko A et
+al.,2012}, \href{http://www.ncbi.nlm.nih.gov/pubmed/23372799}{McCormack
+et al., 2013}). In order to see how much a certain network deviates from
+the scale-free pattern, one can use function
+\protect\hyperlink{connect}{connectivity}}
+
+\section{Analysis and its outputs}\label{test5}
+
+The central function of this package is
+\texttt{{[}nea.render(){]}((\#nea-run))}. It performs the network
+enrichment analysis as described first in
+(\href{http://www.ncbi.nlm.nih.gov/pubmed/22966941}{Alexeyenko et
+al.,2012}), and output contains a number of relevant statistics:
+
+\begin{itemize}
+\tightlist
+\item
+  chi-squared score,
+\item
+  p-value,
+\item
+  q-value (false discovery rate, or p-value adjusted for multiple
+  testing) (\href{http://www.ncbi.nlm.nih.gov/pubmed/12883005}{Storey
+  and Tibshirani, 2013}), and
+\item
+  z-score, which is, however not a direct product of the enrichment
+  analysis. Instead, it is calculated downstream in order to facilitate
+  the use of NEA values in linear modeling. Since methods of the latter
+  are parametric and expect Gaussian values, the normally distributed
+  (under true null) z-score fits this scenario well.
+\end{itemize}
+
+The output also contains auxiliary values:
+
+\begin{itemize}
+\tightlist
+\item
+  number of network edges that exist between any nodes of AGS and FGS
+  (but does not include those within AGS or within FGS), and
+\item
+  respective number of edges expected by chance, calculated with the
+  binomial formula.
+\end{itemize}
+
+The most computationally intense part of \texttt{nea.render()} is
+counting the actual network edges in each AGS-FGS pair. At this step,
+\texttt{nea.render()} can employ parallel jobs, which is enabled with R
+package
+\href{https://stat.ethz.ch/R-manual/R-devel/library/parallel/doc/parallel.pdf}{parallel}
+by using parameter \textbf{Parallelize}.
+
+If the user wants to execute the conventional \emph{binomial GSEA}, then
+function \protect\hyperlink{gsea-run}{\texttt{gsea.render()}} can be
+used. It accepts the same input as \texttt{nea.render()} (except
+parameter \texttt{NET}), and produces output from Fisher's exact test
+arranged similarly to that of \texttt{nea.render()}:
+
+\begin{itemize}
+\tightlist
+\item
+  odds ratio estimate,
+\item
+  p-value,
+\item
+  q-value, and
+\item
+  number of genes shared by AGS and FGS.
+\end{itemize}
+
+\hypertarget{test2}{\section{Datasets}\label{test2}}
+
+The package contains the following data sets:
+
+\begin{itemize}
+\tightlist
+\item
+  two versions of NET, a smaller:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    net.kegg
+    (\href{http://www.ncbi.nlm.nih.gov/pubmed/11752249}{Kanehisa M et
+    al., 2002}) and a bigger one:
+  \item
+    net.merged (\href{http://www.ncbi.nlm.nih.gov/pubmed/25236784}{Merid
+    SK et al., 2014})
+  \end{itemize}
+\item
+  an example collection of FGSs
+
+  \begin{itemize}
+  \tightlist
+  \item
+    can.sig.go (2406 distinct genes in 34 KEGG pathways
+    (\href{http://www.ncbi.nlm.nih.gov/pubmed/11752249}{Kanehisa M et
+    al., 2002}) and GO terms
+    (\href{http://www.ncbi.nlm.nih.gov/pubmed/10802651}{Ashburner M et
+    al., 2000} ))
+  \end{itemize}
+\item
+  three input datasets for creating AGSs:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    somatic point mutations tcga.gbm
+    (\href{http://www.ncbi.nlm.nih.gov/pubmed/20393554}{International
+    Cancer Genome Consortium, 2010})
+  \item
+    two subsets of FANTOM5 transcriptomics data
+
+    \begin{itemize}
+    \tightlist
+    \item
+      fantom5.43samples
+    \item
+      fant.carc
+      (\href{http://www.ncbi.nlm.nih.gov/pubmed/24670764}{FANTOM
+      Consortium and the RIKEN PMI and CLST (DGT), 2014}).
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+Apart from directly using these \textbf{.Rdata} files included in the
+package (such as \texttt{data(net.kegg)}), we also describe below,
+functions of \textbf{NEArender} for importing text files and then
+preparing from them AGS, FGS and NET inputs in the R space.
+
+Properly formatted example text files can be downloaded from
+\href{http://research.scilifelab.se/andrej_alexeyenko/downloads/test_data/}{here}
+
+\hypertarget{test4}{\section{Functions usage and examples}\label{test4}}
+
+In order to run \texttt{nea.render()} and \texttt{gsea.render()}, the
+user should prepare the input components with functions described below.
+
+\hypertarget{ags}{\subsection{Preparing AGS file}\label{ags}}
+
+Since the AGS is the most dynamic and user-specific part of the input,
+the functionality for AGS compilation and processing is most developed.
+As mentioned above, AGSs can be prepared in two alternative ways:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\tightlist
+\item
+  From pre-processed R lists and matrices or
+\item
+  By providing text file inputs.
+\end{enumerate}
+
+\textbf{Alternative (1):}
+
+The function \protect\hyperlink{s2g}{\texttt{samples2ags()}} creates
+AGSs from an R matrix where each column corresponds to an individual
+sample or an experimental condition and each row corresponds to an
+individual gene/protein (i.e.~a potential node in the network -- while
+IDs that are not found as network nodes would be ignored). An R list of
+AGSs can be prepared with \texttt{samples2ags()} by one out of five
+available algorithms (set with parameter `method'): ``significant'',
+``top'', ``toppos'', ``topnorm'', ``toprandom'' . Depending on the used
+algorithm, the number of genes per AGS would be either data-driven (when
+all significant ones are included) or user-defined (when N top ranking
+ones are included regardless of statistical significance). See help to
+the function (\texttt{?samples2ags}) for more details
+
+Example of alternative (1):
+
+Here we considered FANTOM5 - 43 carincinoma cell samples where the
+expression values indicated normalized tags per million (TPM) from
+CAGE-RNA sequencing
+(\href{http://www.ncbi.nlm.nih.gov/pubmed/24670764}{FANTOM Consortium
+and the RIKEN PMI and CLST (DGT), 2014}). AGS lists are then obtained by
+\emph{``topnorm''} method by which we perform data reduction and obtain
+sample-specific lists of altered genes (these can partially overlap with
+each other).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#input <- fread("http://research.scilifelab.se/andrej_alexeyenko/downloads/test_data/FANTOM5.43samples.txt",sep="\textbackslash{}t",header=T,stringsAsFactors=FALSE,data.table = F)}
+\NormalTok{##  Converting genenames as rownames}
+\CommentTok{# rownames(input) <-input[,1]}
+\CommentTok{# input <- as.matrix(input[,c(2:ncol(input))])}
+
+\KeywordTok{data}\NormalTok{(}\StringTok{"fantom5.43samples"}\NormalTok{)}
+\NormalTok{input <-}\StringTok{ }\NormalTok{fantom5.43samples}
+\KeywordTok{dim}\NormalTok{(input)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 16619    43
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ags.list1 <-}\StringTok{ }\KeywordTok{samples2ags}\NormalTok{(input, }\DataTypeTok{Ntop=}\DecValTok{20}\NormalTok{, }\DataTypeTok{method=}\StringTok{"topnorm"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+As we see, the matrix (i.e input) consists of 16619 gene rows and 43
+sample columns. Next, we apply \emph{``topnorm''}
+(\texttt{method="topnorm"}) to each sample column to obtain an R list
+\texttt{ags.list1} where each sample-specific list element contains one
+sample-specific AGS: a set of top 20 genes, each of which was selected
+for being most deviating from its mean across the sample cohort (see the
+2nd section of ``Altered gene sets'' in Figure \ref{figlab0}). Note that
+here 20 genes per AGS were picked regardless of their formal
+significance. For comparison, by setting parameter
+\texttt{method=”significant”} we could select for each AGS all genes
+that pass a one-sided z-test that pass a specified p-value threshold,
+adjusted for multiple testing. In this case, AGSs typically would
+contain gene sets of variable size. Next, a special function
+\texttt{mutations2ags()} also allows direct creation of AGSs from an R
+matrix that contains full sets of mutated genes for each sample:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{data}\NormalTok{(}\StringTok{"tcga.gbm"}\NormalTok{,}\DataTypeTok{package=}\StringTok{"NEArender"}\NormalTok{)}
+\NormalTok{ags.list3 <-}\StringTok{ }\KeywordTok{mutations2ags}\NormalTok{(tcga.gbm, }\DataTypeTok{col.mask=}\StringTok{"[-.]01$"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\emph{we optionally used the parameter \texttt{col.mask} in order to
+select only tumor samples by TCGA barcodes -- hence the parameter is
+TCGA-specific.}
+
+\textbf{Alternative (2):}
+
+In case of importing a text file with ready, pre-created AGSs, one
+should use \protect\hyperlink{igs}{\texttt{import.gs()}}. The function
+returns a list of as many elements as there were distinct AGS labels in
+the file (i.e.~typically multiple AGSs are imported from a single file).
+
+Example of alternative (2):
+
+The file \textbf{cluster2\_Downregulated\_ags.txt} contains 274 genes
+which represents a sample-specific AGSs, i.e. lists of altered genes
+that we have compiled with a certain procedure before. Now we are just
+importing the structure to be used as a list \textbf{ags.list} within R.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ags.list2 <-}\KeywordTok{import.gs}\NormalTok{(}
+\StringTok{"http://research.scilifelab.se/andrej_alexeyenko/downloads/test_data/cluster2_Downregulated_ags.txt"}\NormalTok{, }
+\DataTypeTok{Lowercase =} \DecValTok{1}\NormalTok{, }\DataTypeTok{col.gene =} \DecValTok{1}\NormalTok{,}\DataTypeTok{col.set =} \DecValTok{3}\NormalTok{, }\DataTypeTok{gs.type =} \StringTok{'ags'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\emph{Based on the format of the above example files, users can create
+their own TAB-delimited text files to be used as \textbf{ags.list}}.
+\emph{The column positions in the files can be arbitrarily changed using
+parameters \textbf{col.gene} and \textbf{col.set}.} \emph{One can view
+the data formats of current examples listed in NEArender package simply
+by (\texttt{head(can.sig.go)} or \texttt{head(fantom5.43samples)})}
+
+\hypertarget{fgs}{\subsection{Preparing FGS file}\label{fgs}}
+
+Since FGSs usually pre-exist rather than are created from user's data,
+they are imported from text files. For this reason their format and the
+import procedure using the function \texttt{import.gs()} are identical
+to the alternative (2) above. However, there is a special option unique
+to NEA and not available in GSEA, where single genes can be treated as
+FGS. A full list of such FGSs can be automatically created from all
+network nodes of NET with
+\protect\hyperlink{misc}{\texttt{as\_genes\_fgs()}}, so that each FGS
+item in the output list contains just one gene. Alternatively, users can
+create more specific single- or multi-gene FGS collections of their own
+and then import them with \texttt{import.gs()}. In such files, one
+typically uses the gene/protein IDs as the FGS labels.
+
+\emph{The users can upload their own FGS text files. Identically to AGS,
+an FGS file should be a tab-delimited text file containing
+gene/protein/nodeIDs and their FGS labels (such as pathway, ontology
+terms, or being user-defined).}
+
+Examples :
+
+Here we used file \texttt{can.sig.go} as a small collection of
+functional gene sets (FGS). It contains 34 GO terms and KEGG pathway
+that represent signaling processes related to many diseases, with a
+special focus on cancer. It can be used for a primary, exploratory
+analysis of the package functionality (note that since the AGS and FGS
+formats are identical, it could also be submitted as an AGS collection).
+
+Uploading text file :
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fgs.list <-}\StringTok{ }\KeywordTok{import.gs}\NormalTok{(}
+\StringTok{"http://research.scilifelab.se/andrej_alexeyenko/downloads/test_data/can.sig.go.txt"}\NormalTok{,}
+\DataTypeTok{Lowercase =} \DecValTok{1}\NormalTok{, }\DataTypeTok{col.gene =} \DecValTok{2}\NormalTok{, }\DataTypeTok{col.set =} \DecValTok{3}\NormalTok{, }\DataTypeTok{gs.type =} \StringTok{'fgs'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Note that in the package the dataset \texttt{can.sig.go} has been saved
+as Rdata so that it can be called directly via
+\texttt{data(can.sig.go)}.
+
+Uploading Rdata Object:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{data}\NormalTok{(can.sig.go)}
+\NormalTok{fgs.list <-}\StringTok{ }\KeywordTok{import.gs}\NormalTok{(can.sig.go)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{net}{\subsection{Preparing NET file}\label{net}}
+
+The network files can be imported via \texttt{import.net()}. It requires
+two columns in a TAB-delimited file so that each line contains two node
+IDs connected by the given edge.
+
+Examples :
+
+\texttt{net.kegg} is a network obtained by downloading the KEGG pathways
+as separate KGML files, extracting from the latter all gene-gene links,
+and then merging the links into one global network, which erased borders
+between the pathways. Like \texttt{can.sig.go}, in NEA render
+\texttt{net.kegg} can be directly used as \texttt{data(net.kegg)} or as
+text file:
+
+Uploading Rdata Object:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{data}\NormalTok{(net.kegg)}
+\NormalTok{net <-}\StringTok{ }\KeywordTok{import.net}\NormalTok{(net.kegg)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Network of 42491 edges between 4064 nodes..."
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\KeywordTok{names}\NormalTok{(net}\OperatorTok{$}\NormalTok{links)[}\DecValTok{10}\NormalTok{], net}\OperatorTok{$}\NormalTok{links[[}\DecValTok{10}\NormalTok{]], }\DataTypeTok{sep=}\StringTok{": "}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "abcc8: cacna1a" "abcc8: cacna1b" "abcc8: cacna1c" "abcc8: cacna1d"
+## [5] "abcc8: cacna1e" "abcc8: cacna1g"
+\end{verbatim}
+
+Uploading text file :
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{net <-}\StringTok{ }\KeywordTok{import.net}\NormalTok{(}\StringTok{"http://research.scilifelab.se/andrej_alexeyenko/downloads/test_data/net.kegg.txt"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Network of 42491 edges between 4064 nodes..."
+\end{verbatim}
+
+We can expect that within-pathway connectivity would be higher within
+original pathways than between them, i.e.~overall in the network. This
+can be seen at the respective plot (Funcoup 3.0 network) in Figure
+\ref{figlab1}.
+
+We can see that the connectivity pattern differs from e.g.~networks
+derived in pathway-ignorant way from multi-facetted data integration
+STRING9 and merged.
+
+\texttt{Net.merged} is the network previously used by
+(\href{http://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-15-308}{Merid
+SK et al., 2014}). Briefly, this is largely (\textgreater{}90\%) a
+FunCoup based network, i.e a network from Bayesian integration of
+multiple literature and high-throughput data sources. Then this basic
+network was merged with KEGG pathways, CORUM protein complexes, and
+PhosphoSite kinase-substrate links.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{net.merged<-}\StringTok{"http://research.scilifelab.se/andrej_alexeyenko/downloads/test_data/merged6_and_wir1_HC2"}
+\NormalTok{net <-}\StringTok{ }\KeywordTok{import.net}\NormalTok{(net.merged)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Network of 971577 edges between 19027 nodes..."
+\end{verbatim}
+
+\hypertarget{misc}{\subsection{Other Miscellaneous
+functions}\label{misc}}
+
+Function \texttt{save\_gs\_list()} helps to save a collection of AGSs
+(such as \protect\hyperlink{ags}{ags.list}) as a text file. The latter,
+can serve an example of the file format or be submitted to the
+\href{https://www.evinet.org}{web site}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{data}\NormalTok{(net.kegg)}
+\NormalTok{net <-}\StringTok{ }\KeywordTok{import.net}\NormalTok{(net.kegg);}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Network of 42491 edges between 4064 nodes..."
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fgs.genes <-}\StringTok{ }\KeywordTok{as_genes_fgs}\NormalTok{(net);}
+\CommentTok{#save_gs_list(fgs.genes, File = "~/single_gene_ags.groups.tsv");}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{nea-run}{\section{NEA-analysis}\label{nea-run}}
+
+From the above described functions, we created inputs for AGS
+(FANTOM5.43samples.txt), FGS (can.sig.go) and NET (net.kegg) and can now
+demonstrate using the main function \texttt{nea.render}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{n1 <-}\StringTok{ }\KeywordTok{nea.render}\NormalTok{(}\DataTypeTok{AGS=}\NormalTok{ags.list1, }\DataTypeTok{FGS=}\NormalTok{fgs.list, }\DataTypeTok{NET=}\NormalTok{net)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Preparing input datasets:"
+## [1] "Network: 4064 genes/proteins."
+## [1] "FGS: 1293 genes in 34 groups."
+## [1] "AGS: 854 genes in 43 groups..."
+## [1] "Calculating N links expected by chance..."
+## [1] "Rendering integer IDs..."
+##    user  system elapsed 
+##   0.747   0.010   0.756 
+## [1] "Counting actual links..."
+##    user  system elapsed 
+##   0.110   0.000   0.111 
+## [1] "Calculating statistics..."
+## [1] "Done."
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(n1}\OperatorTok{$}\NormalTok{chi, }\DataTypeTok{breaks=}\DecValTok{100}\NormalTok{)    }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{NEArender_vignette_files/figure-latex/unnamed-chunk-13-1.pdf}
+\caption{n1\$chi - chi-square estimate}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(n1}\OperatorTok{$}\NormalTok{z, }\DataTypeTok{breaks=}\DecValTok{100}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{NEArender_vignette_files/figure-latex/unnamed-chunk-13-2.pdf}
+\caption{n1\$z- zscores}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(n1}\OperatorTok{$}\NormalTok{p, }\DataTypeTok{breaks=}\DecValTok{100}\NormalTok{)  }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{NEArender_vignette_files/figure-latex/unnamed-chunk-13-3.pdf}
+\caption{NEA- pvalues}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(n1}\OperatorTok{$}\NormalTok{q, }\DataTypeTok{breaks=}\DecValTok{100}\NormalTok{)  }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{NEArender_vignette_files/figure-latex/unnamed-chunk-13-4.pdf}
+\caption{NEA-qvalues}
+\end{figure}
+
+Note that the values of chi, p, and q are rank-invariant,
+i.e.~unambiguously related to each other. In other words, they differ
+only in terms of scale and density distributions. Consequtively, ranking
+enrichment scores in the AGS-FGS pairs can be done by either of these
+values with the same result.
+
+In general purpose, exploratory analyses the statistical significance
+can be established by \textbf{p-} and \textbf{q-values}. The latter is
+generally more correct, but the \textbf{q-values} are reliable only with
+sufficiently many (at least 300-500) AGS-FGS tests done at once. In case
+of fewer tests, another correction (e.g.~Bonferroni) should be applied.
+
+However, using the NEA output for more complex downstream analyses, such
+as phenotype modeling, is more challenging. The chi-squared statistic
+has two drawbacks from this perspective:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\item
+  It is defined on the non-negative domain and hence cannot distinguish
+  between enrichment and depletion.
+\item
+  It is not normally distributed and thus cannot be processed by
+  statistical methods that employ least squares estimation or otherwise
+  expect Gaussian input (Pearson linear correlation, ANOVA, PCA, or even
+  survival analysis).
+\end{enumerate}
+
+In order to address these problems, we recommend using as input to such
+modeling \textbf{z-scores} that are calculated to AGS-FGS pairs from
+p-values of the chi-squared statistics. Negative signs are assigned to
+those AGS-FGS pairs where the expected number of network edges exceeds
+the actual value (i.e.~depletion). Thus, the resulting z-score
+distribution should appear normal under true null. The latter is
+generally more correct, but the \textbf{q-values} are reliable only with
+sufficiently many (at least 300-500) AGS-FGS tests done at once. In case
+of fewer tests, another correction (e.g.~Bonferroni) should be applied.
+
+\hypertarget{gsea-run}{\section{Binomial GSEA}\label{gsea-run}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ags.list2 <-}\StringTok{ }\KeywordTok{samples2ags}\NormalTok{(fantom5.43samples, }\DataTypeTok{Ntop=}\DecValTok{1000}\NormalTok{, }\DataTypeTok{method=}\StringTok{"topnorm"}\NormalTok{)}
+\NormalTok{g1 <-}\StringTok{ }\KeywordTok{gsea.render}\NormalTok{(}\DataTypeTok{AGS=}\NormalTok{ags.list2, }\DataTypeTok{FGS=}\NormalTok{fgs.list, }\DataTypeTok{Lowercase =} \DecValTok{1}\NormalTok{, }
+\DataTypeTok{ags.gene.col =} \DecValTok{2}\NormalTok{, }\DataTypeTok{ags.group.col =} \DecValTok{3}\NormalTok{, }\DataTypeTok{fgs.gene.col =} \DecValTok{2}\NormalTok{, }\DataTypeTok{fgs.group.col =} \DecValTok{3}\NormalTok{, }
+\DataTypeTok{echo=}\DecValTok{1}\NormalTok{, }\DataTypeTok{Ntotal =} \DecValTok{20000}\NormalTok{, }\DataTypeTok{Parallelize=}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Preparing input datasets:"
+## [1] "AGS: 15271 genes in 43 groups."
+## [1] "Calculating overlap statistics..."
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(}\KeywordTok{log}\NormalTok{(g1}\OperatorTok{$}\NormalTok{estimate), }\DataTypeTok{breaks=}\DecValTok{100}\NormalTok{)  }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{NEArender_vignette_files/figure-latex/unnamed-chunk-14-1.pdf}
+\caption{g1\$estimate - an estimate of the odds ratio}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(g1}\OperatorTok{$}\NormalTok{n, }\DataTypeTok{breaks=}\DecValTok{100}\NormalTok{)  }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{NEArender_vignette_files/figure-latex/unnamed-chunk-14-2.pdf}
+\caption{g1\$n - number of ags genes that belongs to corresponding fgs}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(g1}\OperatorTok{$}\NormalTok{p, }\DataTypeTok{breaks=}\DecValTok{100}\NormalTok{)  }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{NEArender_vignette_files/figure-latex/unnamed-chunk-14-3.pdf}
+\caption{g1\$p - the p-value of the fishers.exact test}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(g1}\OperatorTok{$}\NormalTok{q, }\DataTypeTok{breaks=}\DecValTok{100}\NormalTok{)  }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{NEArender_vignette_files/figure-latex/unnamed-chunk-14-4.pdf}
+\caption{g1\$q - Adjusted p-values by ``BH-method''}
+\end{figure}
+
+\hypertarget{bor}{\section{Benchmarking and ROC curves}\label{bor}}
+
+The package also contains functions
+\texttt{connectivity()},\texttt{topology2nd()}, \texttt{benchmark()} and
+\texttt{roc()} which enable evaluating and benchmarking alternative NETs
+using either standard or custom FGSs, as described in
+(\href{http://www.ncbi.nlm.nih.gov/pubmed/25236784}{Merid SK et al.,
+2014}). Briefly, the \texttt{benchmark()} consists of many test cases as
+there are FGS members in total (multiple occurrences of the same genes
+in different FGS are treated separately). The procedure tests each such
+gene for being an FGS member. The true positive or false negative result
+is assigned if the gene receives an NEA score above or below a certain
+threshold, respectively. In parallel, randomly picked genes with
+matching node degree are tested against the same FGS in order to
+estimate specificity via the false positive versus true negative ratio.
+The counts of alternative test outcomes TP, TN, FP, and FN at variable
+NEA thresholds are used for plotting ROC curves. The function can work
+in the \texttt{parallel} mode (Parallelize\textgreater{}1), similarly to
+\texttt{nea.render()} above:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b0 <-}\StringTok{ }\KeywordTok{benchmark}\NormalTok{ (}\DataTypeTok{NET =}\NormalTok{ net,}
+ \DataTypeTok{GS =}\NormalTok{ fgs.list, }
+ \DataTypeTok{echo=}\DecValTok{1}\NormalTok{, }\DataTypeTok{graph=}\OtherTok{TRUE}\NormalTok{, }\DataTypeTok{na.replace =} \DecValTok{0}\NormalTok{, }\DataTypeTok{mask =} \StringTok{"."}\NormalTok{, }\DataTypeTok{minN =} \DecValTok{0}\NormalTok{,}
+ \DataTypeTok{coff.z =} \FloatTok{1.965}\NormalTok{, }\DataTypeTok{coff.fdr =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{Parallelize=}\DecValTok{1}\NormalTok{);}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Preparing input datasets:"
+## [1] "Network: 4064 genes/proteins."
+## [1] "FGS: 4064 genes in 4064 groups."
+## [1] "AGS: 1293 genes in 34 groups..."
+## [1] "Calculating N links expected by chance..."
+## [1] "Rendering integer IDs..."
+##    user  system elapsed 
+##   1.758   0.003   1.761 
+## [1] "Counting actual links..."
+##    user  system elapsed 
+##  82.925   0.048  82.983 
+## [1] "Calculating statistics..."
+## [1] "Done."
+## [1] "Matching each positive test node with a negative one, regarding node connectivity: "
+## [1] 100
+## [1] 200
+## [1] 300
+## [1] 400
+## [1] 500
+## [1] 600
+## [1] 700
+## [1] 800
+## [1] 900
+## [1] 1000
+## [1] 1100
+## [1] 1200
+## [1] 1300
+## [1] 1400
+## [1] 1500
+## [1] 1600
+## [1] 1700
+## [1] 1800
+\end{verbatim}
+
+\begin{figure}
+\centering
+\includegraphics{NEArender_vignette_files/figure-latex/unnamed-chunk-15-1.pdf}
+\caption{ROC curve evaluating KEGG network (net.kegg) for specific
+member term - ``kegg\_04270\_vascular\_smooth\_muscle\_contraction''}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b1 <-}\StringTok{ }\OtherTok{NULL}\NormalTok{;}
+\ControlFlowTok{for}\NormalTok{ (mask }\ControlFlowTok{in} \KeywordTok{c}\NormalTok{(}\StringTok{"kegg_"}\NormalTok{, }\StringTok{"go_"}\NormalTok{)) \{}
+\NormalTok{b1[[mask]] <-}\StringTok{ }\OtherTok{NULL}\NormalTok{;}
+\NormalTok{ref_list <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{net.kegg=}\NormalTok{net.kegg,}\DataTypeTok{net.merged=}\NormalTok{net.merged)}
+\ControlFlowTok{for}\NormalTok{ (file.net }\ControlFlowTok{in} \KeywordTok{c}\NormalTok{(}\StringTok{"net.kegg"}\NormalTok{,}\StringTok{"net.merged"}\NormalTok{)) \{}
+\CommentTok{# a series of networks can be put here: c("net.kegg1", "net.kegg2", "net.kegg3") in ref_list}
+\NormalTok{net <-}\StringTok{ }\KeywordTok{import.net}\NormalTok{(ref_list[[file.net]], }\DataTypeTok{col.1 =} \DecValTok{1}\NormalTok{, }\DataTypeTok{col.2 =} \DecValTok{2}\NormalTok{, }\DataTypeTok{Lowercase =} \DecValTok{1}\NormalTok{, }\DataTypeTok{echo =} \DecValTok{1}\NormalTok{)}
+\NormalTok{b1[[mask]][[file.net]] <-}\StringTok{ }\KeywordTok{benchmark}\NormalTok{ (}\DataTypeTok{NET =}\NormalTok{ net, }\DataTypeTok{GS =}\NormalTok{ fgs.list, }\DataTypeTok{echo=}\DecValTok{1}\NormalTok{, }
+\DataTypeTok{graph=}\OtherTok{FALSE}\NormalTok{, }\DataTypeTok{na.replace =} \DecValTok{0}\NormalTok{, }\DataTypeTok{mask =}\NormalTok{ mask, }\DataTypeTok{minN =} \DecValTok{0}\NormalTok{,  }\DataTypeTok{Parallelize=}\DecValTok{1}\NormalTok{);}
+\NormalTok{\}\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{roc}\NormalTok{(b1[[}\StringTok{"kegg_"}\NormalTok{]], }\DataTypeTok{coff.z =} \FloatTok{2.57}\NormalTok{, }\DataTypeTok{main=}\StringTok{"kegg_"}\NormalTok{); }
+\KeywordTok{roc}\NormalTok{(b1[[}\StringTok{"go_"}\NormalTok{]], }\DataTypeTok{coff.z =} \FloatTok{2.57}\NormalTok{,}\DataTypeTok{main=}\StringTok{"go_"}\NormalTok{);}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{http://research.scilifelab.se/andrej_alexeyenko/downloads/test_data/roc_kegg.png}
+\caption{ROC curves evaluating differential performance of net.kegg and
+net.merged in predicting KEGG terms \label{figlabn1}}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{http://research.scilifelab.se/andrej_alexeyenko/downloads/test_data/roc_kegg.png}
+\caption{ROC curves evaluating differential performance of net.kegg and
+net.merged in predicting GO terms}
+\end{figure}
+
+\emph{The full description of the ROC approach to network benchmarking
+can be found in
+(\href{http://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-15-308}{Merid
+SK et al., 2014}). Note that this approach is very different from the
+trivial measurement of edge overlap between two networks under a
+variable edge confidence threshold. Instead, we run multiple network
+enrichment tests in regard of individual genes´ membership in different
+pathways.}
+
+\begin{itemize}
+\tightlist
+\item
+  True Predictions (correct pathway membership) are plotted vertically,
+  False Predictions (wrong/unknown membership) are plotted horizontally.
+  As always with ROC curves, one should watch false positive (X-axis)
+  versus false negative (Y-axis) rates. Practically, the best network is
+  the one with the highest ROC curve elevation in the upper left corner
+  of the plot, i.e.~the one that, under a suitable siginifcant threshold
+  has led to most correct classification of true pathway members and
+  conveyed least misleading information on false (or yet unknown)
+  membership.*
+\end{itemize}
+
+\hypertarget{connect}{\section{Estimating topological properties of used
+networks}\label{connect}}
+
+\hypertarget{sfp}{\subsection{Scale-free property}\label{sfp}}
+
+Most of the known networks, especially the biological ones are
+\emph{scale-free}. This means that the distribution of node degrees
+(also called node connectivity values or simply the numbers of edges for
+each node) follows the \emph{power law}. Practically, it is expressed as
+``few nodes have many edges, whereas many nodes have few edges''. After
+a log-log transformation, this dependency appears as a straight line.
+Knowing this property is especially important because in the current
+package the binomial test of network enrichment expects scale-freeness
+in the analyzed network. If a particular network seems too different
+(though some deviations from the power law occur in almost every
+real-world network), then we would recommend using other tools, such as
+those based on full network randomization
+(\href{http://www.ncbi.nlm.nih.gov/pubmed/23372799}{McCormack et al.,
+2013} , \href{http://www.ncbi.nlm.nih.gov/pubmed/25236784}{Merid et al.,
+2014}).
+
+The package contains a utility function \texttt{connectivity()} for
+quick visual inspection of this property. The function receives an input
+network (either a text file or an R list imported with
+\texttt{import.net()}) and plots on the log-log scale its node degree
+distribution summarized into few bins. After the log-log transformation
+we expect the linear fit to be matching the bin top points. The better
+the fit, the more scale-free is the network.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{connectivity}\NormalTok{(}\DataTypeTok{NET=}\StringTok{"http://research.scilifelab.se/andrej_alexeyenko/downloads/test_data/merged6_and_wir1_HC2"}\NormalTok{, }\DataTypeTok{Lowercase =} \DecValTok{1}\NormalTok{, }\DataTypeTok{col.1 =} \DecValTok{1}\NormalTok{, }\DataTypeTok{col.2 =} \DecValTok{2}\NormalTok{, }\DataTypeTok{echo=}\DecValTok{1}\NormalTok{, }\DataTypeTok{main=}\StringTok{"Higher order topology"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Importing network from text file:"
+## [1] "Network of 971577 edges between 19027 nodes..."
+\end{verbatim}
+
+\begin{figure}
+\centering
+\includegraphics{NEArender_vignette_files/figure-latex/unnamed-chunk-19-1.pdf}
+\caption{Node degree distribution of \texttt{net.merged}}
+\end{figure}
+
+For example out of the nine networks presented in Figure \ref{figlab2},
+we can see that \emph{FunCoup 3.0} and \emph{KINASE2SUBSTRATE} were
+likely the most and the least scale-free, respectively. Although none of
+the nine networks followed the power law perfectly (the red lines
+indicate ideal distributions given network size and connectivity range).
+The origin and descriptions of these networks can be found at
+\url{https://www.evinet.org/}.
+
+\hypertarget{sot}{\subsection{Second order topology}\label{sot}}
+
+Similarly to the property of scale-freeness, estimation of network
+enrichment in the current package might depend on non-randomness of node
+degree distribution across network edges.
+
+For example, it was shown that highly connected nodes tend to `avoid'
+each other in a yeast network, i.e.~such connect with each other less
+frequently than it would be expected by chance
+(\href{http://www.ncbi.nlm.nih.gov/pubmed/11988575}{Maslov and Sneppen,
+2002}). We, however, can often see an opposite tendency Figure
+\ref{figlab1}. In order to visualize and evaluate this property, one can
+employ function \texttt{topology2nd} in a fashion similar to
+\texttt{connectivity} described above:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{topology2nd}\NormalTok{(}\DataTypeTok{NET=}\StringTok{"http://research.scilifelab.se/andrej_alexeyenko/downloads/test_data/merged6_and_wir1_HC2"}\NormalTok{, }\DataTypeTok{Lowercase =} \DecValTok{1}\NormalTok{, }\DataTypeTok{col.1 =} \DecValTok{1}\NormalTok{, }\DataTypeTok{col.2 =} \DecValTok{2}\NormalTok{, }\DataTypeTok{echo=}\DecValTok{1}\NormalTok{, }\DataTypeTok{main=}\StringTok{"Higher order topology"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Importing network from text file:"
+## [1] "Network of 971577 edges between 19027 nodes..."
+\end{verbatim}
+
+\begin{figure}
+\centering
+\includegraphics{NEArender_vignette_files/figure-latex/unnamed-chunk-20-1.pdf}
+\caption{Second order topology \texttt{net.merged}}
+\end{figure}
+
+\section{Second order topology observed in nine example biological
+networks}\label{second-order-topology-observed-in-nine-example-biological-networks}
+
+\begin{figure}
+\centering
+\includegraphics{http://research.scilifelab.se/andrej_alexeyenko/downloads/test_data/topology2nd.9networks.png}
+\caption{Second order topology observed in nine example biological
+networks \label{figlab1}}
+\end{figure}
+
+From plot, networks \emph{FunCoup 3.0} and \emph{TF\_and\_targets}
+appear the best and the worst in terms of higher order topological bias.
+In FunCoup 3.0 only the most connected nodes stand for the bias, which
+would affect NEA scores of AGS-FGS pairs only if such nodes are unevenly
+distributed across the gene sets. The much more generalized bias in
+\emph{TF\_and\_targets} (or, similarly, in \emph{KINASE2SUBSTRATE}) is
+likely due to the special nature of such networks: they contain
+regulators and regulated proteins as two distinct node classes. In case
+of a strong bias discovered in a certain network, it is important to
+consider if it should be removed or not from the perspective of the
+biological study and its purposes (indeed, the answer is not always
+upfront). If the bias still has to be removed, one can use a special
+algorithm in the C++ tool by
+(\href{http://www.ncbi.nlm.nih.gov/pubmed/23372799}{McCormack et al.,
+2013}).
+
+\section{Node degree distributions in nine example biological
+networks}\label{node-degree-distributions-in-nine-example-biological-networks}
+
+\begin{figure}
+\centering
+\includegraphics{http://research.scilifelab.se/andrej_alexeyenko/downloads/test_data/connectivity.9networks.png}
+\caption{Node degree distributions in nine example biological
+networks.\label{figlab2}}
+\end{figure}
+
+
+\end{document}
