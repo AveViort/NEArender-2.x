@@ -25,7 +25,7 @@
 
 
 import.gs <- function(tbl, Lowercase = 1, col.gene = 2, col.set = 3, 
-	gs.type = '' #typically, AGS or FGS
+	gs.type = '', #typically, AGS or FGS
 	header = FALSE) 
 {
 	#if col.set = 0, then a single FGS list is created
