@@ -27,7 +27,7 @@ samples2ags <- function(m0, Ntop = NA, col.mask = NA, namesFromColumn = NA, meth
 	return.value = FALSE, gs.list = NA #these two options enable a special mode: extract expression values for pre-specified gene set(s) and use them as gene attributes on evinet.org for node coloring
 ) {
 	if (!method %in% c("topnorm") & return.value == TRUE) {
-		stop(paste("If 'return.value' is TRUE, then parameter 'method' should only be: [", paste(c("topnorm"), collapse=", "), "]. Terminated...", sep=""));
+		stop(paste("If 'return.value' is TRUE, then parameter 'method' should only be: [", paste(c("topnorm"), collapse = ", "), "]. Terminated...", sep = ""));
 	}
 	
 	if (return.value == TRUE & !is.list(gs.list)) {
@@ -55,10 +55,6 @@ samples2ags <- function(m0, Ntop = NA, col.mask = NA, namesFromColumn = NA, meth
 		print("Parameter 'Ntop' is irrelevant when 'return.value' is TRUE.");
 	}
 	
-	if (is.null(method)) {
-		stop("Parameter 'method' is missing...");
-	}
-	
 	if (grepl("top", method, ignore.case = TRUE) & is.na(Ntop) & !return.value) {
 		stop("Parameter 'Ntop' is missing...");
 	}
@@ -84,19 +80,19 @@ samples2ags <- function(m0, Ntop = NA, col.mask = NA, namesFromColumn = NA, meth
 		}
 	}
 
-	if (method == "significant" | method=="topnorm") {
+	if (method %in% c("significant", "topnorm")) {
 		SD <- apply(m1, 1, sd, na.rm = TRUE);
 		uc <- sweep(uc, 1, SD, FUN = "/");
 		if (method == "significant") {
 			if (!return.value) {
-				p1 <- 2*pnorm(abs(uc), lower.tail = FALSE);
+				p1 <- 2 * pnorm(abs(uc), lower.tail = FALSE);
 				q1 <- apply(p1, 2, function (x) p.adjust(x, method = "BH"));
 				ags.list <- apply(q1, 2, function (x) tolower(names(x))[which(x < cutoff.q)]);
 			}
 		}
 	}
 	
-	if (method == "top" | method == "toppos" | method == "topnorm") {
+	if (method %in% c("top", "toppos", "topnorm")) {
 		if (!return.value) {
 			for (label in colnames(uc)) {
 				if (method == "toppos") {

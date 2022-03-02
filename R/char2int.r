@@ -12,35 +12,43 @@
 
 
 
-char2int.fast  <- function (net.list, gs.list.1, gs.list.2 = NULL, Parallelize=1) {
-all.names <- unique(c(names(net.list$links), unlist(net.list$links), unlist(gs.list.1)));
-map.names <- 1:length(all.names);
+char2int.fast  <- function (net.list, gs.list.1, gs.list.2 = NULL, Parallelize = 1) {
+	if (Parallelize != 1) {
+		# returns FALSE when library is not installed and gives a warning, but does not halt program
+		par_status <- require(parallel);
+		if (!par_status) {
+			stop("Please install library 'parallel' to use parallel computations, otherwise use Parallelize = 1");
+		}
+	}
+	
+	all.names <- unique(c(names(net.list$links), unlist(net.list$links), unlist(gs.list.1)));
+	map.names <- 1:length(all.names);
 
-Mapp <- function (x) {map.names[unlist(net.list$links[[x]])]}
-
-names(map.names) <- all.names;
-mapped <- NULL; mapped$net <- NULL; mapped$gs <- NULL;
-# for (n in names(net.list$links)) {mapped$net[[map.names[n]]] <- as.list(map.names[net.list$links[[n]]]);}
-if (Parallelize > 1)  {
-mapped$net <- mclapply(names(net.list$links), Mapp, mc.cores = Parallelize); 
-} else {
-mapped$net <- lapply(net.list$links, function (x) {map.names[unlist(x)]});  
-}
-# names(mapped$net) <- map.names[names(net.list$links)]
-# return(mapped);
-for (i in c("a", "b")) {
-if (i == "a") {gsl = gs.list.1;}
-if (i == "b") { 
-if (!is.null(gs.list.2)) {
-gsl = gs.list.2;
-} else {
-gsl = NULL;
-}}
-if (!is.null(gsl)) {
-for (n in names(gsl)) {
-mapped$gs[[i]][[n]] <- as.list(map.names[gsl[[n]]]);
-}
-}
-}
-return(mapped);
+	Mapp <- function (x) {map.names[unlist(net.list$links[[x]])]}
+	names(map.names) <- all.names;
+	mapped <- NULL; mapped$net <- NULL; mapped$gs <- NULL;
+	# for (n in names(net.list$links)) {mapped$net[[map.names[n]]] <- as.list(map.names[net.list$links[[n]]]);}
+	if (Parallelize > 1)  {
+		mapped$net <- mclapply(names(net.list$links), Mapp, mc.cores = Parallelize); 
+	} else {
+		mapped$net <- lapply(net.list$links, function (x) {map.names[unlist(x)]});  
+	}
+	# names(mapped$net) <- map.names[names(net.list$links)]
+	# return(mapped);
+	for (i in c("a", "b")) {
+		if (i == "a") {gsl = gs.list.1;}
+		if (i == "b") { 
+			if (!is.null(gs.list.2)) {
+				gsl = gs.list.2;
+			} else {
+				gsl = NULL;
+			}
+		}
+		if (!is.null(gsl)) {
+			for (n in names(gsl)) {
+				mapped$gs[[i]][[n]] <- as.list(map.names[gsl[[n]]]);
+			}
+		}
+	}
+	return(mapped);
 }

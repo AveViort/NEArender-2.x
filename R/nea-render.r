@@ -49,8 +49,15 @@
 
 nea.render <- function (AGS, FGS, NET,  Lowercase = 1, ags.gene.col = 2, ags.group.col = 3, fgs.gene.col = 2, fgs.group.col = 3, net.gene1.col = 1, net.gene2.col = 2, echo = 1, 
 	#graph = FALSE, 
-	na.replace = 0, members = FALSE, digitalize = TRUE, Parallelize = 1, diff.enr = FALSE, save.ags = FALSE, save.fgs = FALSE, save.net = FALSE) {
-
+	na.replace = 0, members = FALSE, digitalize = TRUE, Parallelize = 1, diff.enr = FALSE, save.ags = FALSE, save.fgs = FALSE, save.net = FALSE) 
+{
+	if (Parallelize != 1) {
+		# returns FALSE when library is not installed and gives a warning, but does not halt program
+		par_status <- require(parallel);
+		if (!par_status) {
+			stop("Please install library 'parallel' to use parallel computations, otherwise use Parallelize = 1");
+		}
+	}
 
 	if (!is.na(na.replace) & !is.numeric(na.replace)) {
 		stop("Parameter 'na.replace' should contain a numeric value or NA...");

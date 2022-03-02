@@ -30,7 +30,15 @@
 #' hist(g1$q, breaks=100)
 #'@export
 
-gsea.render <- function (AGS, FGS = "CAN_SIG_GO.34.txt", Lowercase = 1, ags.gene.col = 2, ags.group.col = 3, fgs.gene.col = 2, fgs.group.col = 3, echo=1, Ntotal = 20000, Parallelize=1) {
+gsea.render <- function (AGS, FGS = "CAN_SIG_GO.34.txt", Lowercase = 1, ags.gene.col = 2, ags.group.col = 3, fgs.gene.col = 2, fgs.group.col = 3, echo=1, Ntotal = 20000, Parallelize = 1) {
+	if (Parallelize != 1) {
+		# returns FALSE when library is not installed and gives a warning, but does not halt program
+		par_status <- require(parallel);
+		if (!par_status) {
+			stop("Please install library 'parallel' to use parallel computations, otherwise use Parallelize = 1");
+		}
+	}
+
 	if (echo > 0) {
 		print("Preparing input datasets:");
 	}
