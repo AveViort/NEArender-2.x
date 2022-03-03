@@ -4,10 +4,27 @@
 \alias{nea.render}
 \title{Network Enrichment Analysis (NEA)}
 \usage{
-nea.render(AGS, FGS, NET, Lowercase = 1, ags.gene.col = 2,
-  ags.group.col = 3, fgs.gene.col = 2, fgs.group.col = 3,
-  net.gene1.col = 1, net.gene2.col = 2, echo = 1, graph = FALSE,
-  na.replace = 0, members = FALSE, digitalize = TRUE, Parallelize = 1)
+nea.render(
+  AGS,
+  FGS,
+  NET,
+  Lowercase = 1,
+  ags.gene.col = 2,
+  ags.group.col = 3,
+  fgs.gene.col = 2,
+  fgs.group.col = 3,
+  net.gene1.col = 1,
+  net.gene2.col = 2,
+  echo = 1,
+  na.replace = 0,
+  members = FALSE,
+  digitalize = TRUE,
+  Parallelize = 1,
+  diff.enr = FALSE,
+  save.ags = FALSE,
+  save.fgs = FALSE,
+  save.net = FALSE
+)
 }
 \arguments{
 \item{AGS}{Either a text file or a list of members of each AGS (see Details). Group IDs should be found in \code{ags.group.col} and gene IDs should be found in \code{ags.gene.col}. As a special option, an AGS list can also be pre-created from raw data matrices of the format "genes X samples". Such matrices can contain information on gene copy number, gene/protein expression, gene methylation etc (\code{\link{samples2ags}}) or point mutation data (\code{\link{mutations2ags}}). These two functions return AGS lists of length=ncol(Nsamples).}
@@ -32,8 +49,6 @@ nea.render(AGS, FGS, NET, Lowercase = 1, ags.gene.col = 2,
 
 \item{echo}{if messages about execution progress should appear.}
 
-\item{graph}{Plot the heat map}
-
 \item{na.replace}{replace NA values. Default=0, i.e. not to replace}
 
 \item{members}{If matrices \code{members.fgs} and \code{members.fgs} should be created in addition (time- and memory-consuming). These matrices contain lists of genes that contributed to respective AGSxFGS enrichment statistic.}
@@ -41,6 +56,8 @@ nea.render(AGS, FGS, NET, Lowercase = 1, ags.gene.col = 2,
 \item{digitalize}{If the node ID strings should be converted to internal integer ID, and then back to present the results (can speed up the computation). Since this procedure also takes some time, setting \emph{digitalize=TRUE} only makes sense for large computations, with a big network, many FGS and/or AGS.}
 
 \item{Parallelize}{The number of CPU cores to be used for the step "Counting actual links" (the other steps are sufficiently fast). The option is not supported on Windows.}
+
+\item{graph}{Plot the heat map}
 }
 \value{
 An object, i.e. a list of elements \code{n.actual}, \code{n.expected}, \code{chi}, \code{z}, \code{p}, \code{q}, each of which is a matrix of size \code{length(FGS)} x \code{length(AGS)}. The two former ones contain the number of network edges between any nodes of AGS and any nodes of FGS, respectively those observed in the actual network and expected by chance. \code{chi} are the original chi-squared network enrichment statistic values. \code{z} are respective z-scores which are normally distributed under null and are thus suitable as input to regression modelling and other parametric methods. \code{p} and \code{q} are p-values and respective FDR estimates from \code{p.adjust(p, method="BH")}.
@@ -56,8 +73,7 @@ The TAB-delimited file "text_file.groups" should contain pre-compiled gene sets,
 }
 \examples{
 ags.list <- samples2ags(fantom5.43samples, Ntop=20, method="topnorm")
-data(can.sig.go)
-fpath <- can.sig.go
+fpath <- system.file("extdata", "CAN_SIG_GO.34.txt", package="NEArender")
 fgs.list <- import.gs(fpath)
 summary(fgs.list)
 data(net.kegg)
@@ -77,4 +93,3 @@ hist(n1$q, breaks=100)
 }
 \keyword{AGS}
 \keyword{FGS}
-

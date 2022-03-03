@@ -4,7 +4,9 @@
 \name{tcga.gbm}
 \alias{tcga.gbm}
 \title{NEArender}
-\format{A matrix  with genes as rows (9660 genes with mutations reported in at least one sample) and TCGA samples as columns (291 samples). Wild type (=reference) states are denoted with NA.}
+\format{
+A matrix  with genes as rows (9660 genes with mutations reported in at least one sample) and TCGA samples as columns (291 samples). Wild type (=reference) states are denoted with NA.
+}
 \usage{
 data(tcga.gbm)
 }
@@ -15,4 +17,3 @@ TCGA point mutations from the glioblastoma multiforme cohort
 table(is.na(tcga.gbm))
 }
 \keyword{datasets}
-

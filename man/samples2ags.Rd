@@ -4,9 +4,16 @@
 \alias{samples2ags}
 \title{Create AGS from a raw data matrix.}
 \usage{
-samples2ags(m0, Ntop = NA, col.mask = NA, namesFromColumn = NA,
+samples2ags(
+  m0,
+  Ntop = NA,
+  col.mask = NA,
+  namesFromColumn = NA,
   method = c("significant", "top", "toppos", "topnorm", "bestp", "toprandom"),
-  cutoff.q = 0.05)
+  cutoff.q = 0.05,
+  return.value = FALSE,
+  gs.list = NA
+)
 }
 \arguments{
 \item{m0}{input matrix.}
@@ -32,7 +39,6 @@ samples2ags(m0, Ntop = NA, col.mask = NA, namesFromColumn = NA,
 This function creates a number of new AGSs from a given dataset, such as gene copy number, gene/protein expression, gene methylation etc. Such matrices M typically have size Ngenes x Nsamples, so that the current function returns a list of \code{length=ncol(M)}. The AGSs for each of the Nsamples are created with one of the five available methods (see parameter \code{method}).
 }
 \examples{
-data("fantom5.43samples", package="NEArender")
-ags.list <- samples2ags(fantom5.43samples, cutoff.q = 0.01, method="significant")
+data("fantom5.43samples", package = "NEArender")
+ags.list <- samples2ags(fantom5.43samples, cutoff.q = 0.01, method = "significant")
 }
-

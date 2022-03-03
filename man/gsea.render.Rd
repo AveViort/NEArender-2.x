@@ -4,9 +4,18 @@
 \alias{gsea.render}
 \title{Gene Set Enrichment Analysis (GSEA)}
 \usage{
-gsea.render(AGS, FGS, Lowercase = 1, ags.gene.col = 2, ags.group.col = 3,
-  fgs.gene.col = 2, fgs.group.col = 3, echo = 1, Ntotal = 20000,
-  Parallelize = 1)
+gsea.render(
+  AGS,
+  FGS = "CAN_SIG_GO.34.txt",
+  Lowercase = 1,
+  ags.gene.col = 2,
+  ags.group.col = 3,
+  fgs.gene.col = 2,
+  fgs.group.col = 3,
+  echo = 1,
+  Ntotal = 20000,
+  Parallelize = 1
+)
 }
 \arguments{
 \item{AGS}{Either a text file or a list of members of each AGS (see Details). Group IDs should be found in \code{ags.group.col} and gene IDs would be found in \code{ags.gene.col}. Identical to AGS needed for in \code{\link{nea.render}} - see also details there.}
@@ -37,8 +46,7 @@ A binomial version of GSEA, unified as much as possible with \code{\link{nea.ren
 }
 \examples{
 ags.list <- samples2ags(fantom5.43samples, Ntop=20, method="topnorm")
-data(can.sig.go)
-fpath <- can.sig.go
+fpath <- system.file("extdata", "CAN_SIG_GO.34.txt", package="NEArender")
 fgs.list <- import.gs(fpath)
 g1 <- gsea.render(AGS=ags.list, FGS=fgs.list, Lowercase = 1, 
 ags.gene.col = 2, ags.group.col = 3, fgs.gene.col = 2, fgs.group.col = 3, 
@@ -53,4 +61,3 @@ hist(g1$q, breaks=100)
 }
 \keyword{AGS}
 \keyword{FGS}
-

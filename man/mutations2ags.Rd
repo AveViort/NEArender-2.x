@@ -26,4 +26,3 @@ ags.list <- mutations2ags(tcga.gbm, col.mask="[-.]01$")
 length(ags.list)
 length(unique(unlist(ags.list)))
 }
-

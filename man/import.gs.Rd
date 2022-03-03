@@ -4,8 +4,14 @@
 \alias{import.gs}
 \title{Read in an AGS or FGS test file}
 \usage{
-import.gs(tbl, Lowercase = 1, col.gene = 2, col.set = 3, gs.type = "",
-  header = FALSE)
+import.gs(
+  tbl,
+  Lowercase = 1,
+  col.gene = 2,
+  col.set = 3,
+  gs.type = "",
+  header = FALSE
+)
 }
 \arguments{
 \item{tbl}{Input TAB-delimited FGS file.}
@@ -31,8 +37,7 @@ Imports a TAB-delimited AGS or FGS file.
 Checks the format of the given FGS file. Reads in unique gene/protein IDs from the given file \code{tbl} so that the created object can be directly submitted to \code{\link{nea.render}} and \code{\link{gsea.render}}. The function \code{import.gs} will be automatically called from \code{\link{nea.render}} if parameters \code{AGS} and/or \code{FGS} of the latter correspond to text files rather than lists.
 }
 \examples{
-data(can.sig.go)
-fpath <- can.sig.go
+fpath <- system.file("extdata", "CAN_SIG_GO.34.txt", package="NEArender")
 fgs.list <- import.gs(fpath)
 summary(fgs.list)
 
@@ -40,4 +45,3 @@ summary(fgs.list)
 \seealso{
 \code{\link{mutations2ags}}, \link{samples2ags}
 }
-

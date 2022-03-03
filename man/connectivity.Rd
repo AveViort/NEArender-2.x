@@ -4,9 +4,18 @@
 \alias{connectivity}
 \title{Connectivity}
 \usage{
-connectivity(NET, Lowercase = 1, col.1 = 1, col.2 = 2, col.score = 3,
-  echo = 1, main = "Connectivity plot", min.score = NA, n.top = NA,
-  hex = FALSE)
+connectivity(
+  NET = "merged6_and_wir1_HC2",
+  Lowercase = 1,
+  col.1 = 1,
+  col.2 = 2,
+  col.score = 3,
+  echo = 1,
+  main = "Connectivity plot",
+  min.score = NA,
+  n.top = NA,
+  hex = FALSE
+)
 }
 \arguments{
 \item{NET}{Input network file.}
@@ -39,4 +48,3 @@ connect <- connectivity(file,hex=TRUE)
 \seealso{
 \code{\link{benchmark}} and \code{\link{import.net}}
 }
-

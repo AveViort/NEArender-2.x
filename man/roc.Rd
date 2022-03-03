@@ -4,9 +4,19 @@
 \alias{roc}
 \title{ROC for NEA benchmarks}
 \usage{
-roc(tpvsfp, mode = "roc", tpr.stop = 1, fpr.stop = 1, coff.z = 1.965,
-  coff.fdr = 0.1, cex.main = 1, cex.leg = 0.75, main = NA,
-  use.lty = FALSE, print.stats = TRUE, sort_by_letter_and_remove = FALSE)
+roc(
+  tpvsfp,
+  mode = "roc",
+  tpr.stop = 1,
+  fpr.stop = 1,
+  coff.z = 1.965,
+  cex.main = 1,
+  cex.leg = 0.75,
+  main = NA,
+  use.lty = FALSE,
+  print.stats = TRUE,
+  sort_by_letter_and_remove = FALSE
+)
 }
 \arguments{
 \item{tpvsfp}{a list contaning data for the ROC curve(s) from \code{\link{benchmark}}: \code{cross.z}, \code{cutoffs}, \code{ne}, \code{nv},\code{tp}, \code{fp}, \code{tn}, \code{fn}.}
@@ -19,8 +29,6 @@ roc(tpvsfp, mode = "roc", tpr.stop = 1, fpr.stop = 1, coff.z = 1.965,
 
 \item{coff.z}{the point where to stop the ROC curve (in order to disable, set coff.z to below the minimal possible level)}
 
-\item{coff.fdr}{the point where to put the circle ('cross') at the ROC curve}
-
 \item{cex.main}{font size for the main title}
 
 \item{cex.leg}{font size for the legend}
@@ -32,6 +40,8 @@ roc(tpvsfp, mode = "roc", tpr.stop = 1, fpr.stop = 1, coff.z = 1.965,
 \item{print.stats}{add N(edges) and N(vertices) to the legend lines; only works if non-empty $ne and $nv elements are submitted in tpvsfp. default:"TRUE"}
 
 \item{sort_by_letter_and_remove}{enable a specific order for the curves in the legend, set by prefix letters \code{gsub("[A-Z]\\:", "", p1, fixed=F, ignore.case=T)}, such as "a:network1", "b:network-2" etc., whereby a: and b: are removed from the text strings. default:"FALSE"}
+
+\item{coff.fdr}{the point where to put the circle ('cross') at the ROC curve}
 }
 \description{
 Plot ROC curve(s) for benchmarked network(s)
@@ -42,8 +52,7 @@ Therefore the benchmark results are presented as ROC curves that end at minimal 
 }
 \examples{
 # Benchmark and plot one networks on the whole set of test GSs, using no mask:
-data(can.sig.go);
-fpath <- can.sig.go
+fpath <- system.file("extdata", "CAN_SIG_GO.34.txt", package="NEArender")
 gs.list <- import.gs(fpath, Lowercase = 1, col.gene = 2, col.set = 3);
 data(net.kegg)
 netpath <- net.kegg
@@ -80,4 +89,3 @@ roc(b1[["go_"]], coff.z = 2.57,main="go_");
 \link{benchmark}
 }
 \keyword{benchmark}
-

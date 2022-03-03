@@ -4,7 +4,9 @@
 \name{fantom5.43samples}
 \alias{fantom5.43samples}
 \title{A Fantom5 transcriptomes in 43 carincinoma cell samples}
-\format{An expression data matrix with the genes as rows and columns as cell line samples}
+\format{
+An expression data matrix with the genes as rows and columns as cell line samples
+}
 \usage{
 data(fantom5.43samples)
 }
@@ -16,4 +18,3 @@ colnames(fantom5.43samples)
 
 }
 \keyword{datasets}
-

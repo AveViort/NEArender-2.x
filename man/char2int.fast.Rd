@@ -22,4 +22,3 @@ This function reads input list objects and maps unique numbers to each member in
 \code{\link{nea.render}}
 }
 \keyword{internal}
-

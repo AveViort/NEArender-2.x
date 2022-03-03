@@ -4,8 +4,14 @@
 \alias{topology2nd}
 \title{Higher order topology and correlation between node degrees}
 \usage{
-topology2nd(NET, Lowercase = 1, col.1 = 1, col.2 = 2, echo = 1,
-  main = "Higher order topology")
+topology2nd(
+  NET = "merged6_and_wir1_HC2",
+  Lowercase = 1,
+  col.1 = 1,
+  col.2 = 2,
+  echo = 1,
+  main = "Higher order topology"
+)
 }
 \arguments{
 \item{NET}{Either a text network file or an R list imported with \code{import.net}}
@@ -31,4 +37,3 @@ topology2nd(NET=net, main="Second order topology in KEGG network")
 \seealso{
 \code{\link{connectivity}}, \code{\link{benchmark}}
 }
-

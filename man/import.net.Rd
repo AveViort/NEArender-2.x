@@ -4,8 +4,16 @@
 \alias{import.net}
 \title{Import a network text file}
 \usage{
-import.net(tbl, Lowercase = 1, col.1 = 1, col.2 = 2, col.score = 3,
-  min.score = NA, n.top = NA, echo = 1)
+import.net(
+  tbl,
+  Lowercase = 1,
+  col.1 = 1,
+  col.2 = 2,
+  col.score = 3,
+  min.score = NA,
+  n.top = NA,
+  echo = 1
+)
 }
 \arguments{
 \item{tbl}{Input network file.}
@@ -41,4 +49,3 @@ print(paste(names(net$links)[100], net$links[[100]], sep=": "))
 \seealso{
 \code{\link{mutations2ags}}, \code{\link{samples2ags}}
 }
-

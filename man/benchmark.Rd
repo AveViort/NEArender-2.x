@@ -4,10 +4,22 @@
 \alias{benchmark}
 \title{Benchmark networks using Network Enrichment Analysis (NEA)}
 \usage{
-benchmark(NET, GS, gs.gene.col = 2, gs.group.col = 3, net.gene1.col = 1,
-  net.gene2.col = 2, echo = 1, graph = FALSE, na.replace = 0,
-  mask = ".", minN = 0, coff.z = 1.965, coff.fdr = 0.1,
-  Parallelize = 1)
+benchmark(
+  NET = "merged6_and_wir1_HC2",
+  GS = "CAN_SIG_GO.34.txt",
+  gs.gene.col = 2,
+  gs.group.col = 3,
+  net.gene1.col = 1,
+  net.gene2.col = 2,
+  echo = 1,
+  graph = FALSE,
+  na.replace = 0,
+  mask = ".",
+  minN = 0,
+  coff.z = 1.965,
+  coff.fdr = 0.1,
+  Parallelize = 1
+)
 }
 \arguments{
 \item{NET}{A network to benchmark. See Details in \code{\link{nea.render}}.}
@@ -54,8 +66,7 @@ The function would either plot a ROC curve for the analyzed network, or return a
  cross.z, a z-score value which corresponds to FDR=\code{coff.fdr} (will be denoted with a special marker at the curve);
 }
 \examples{
-data(can.sig.go);
-fpath <- can.sig.go
+fpath <- system.file("extdata", "CAN_SIG_GO.34.txt", package="NEArender")
 gs.list <- import.gs(fpath, Lowercase = 1, col.gene = 2, col.set = 3);
 data(net.kegg)
 netpath <- net.kegg
@@ -89,4 +100,3 @@ roc(b1[["go_"]], coff.z = 2.57);
 \code{\link{roc}}, \code{\link{nea.render}}
 }
 \keyword{ROC}
-

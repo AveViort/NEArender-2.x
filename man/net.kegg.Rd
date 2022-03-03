@@ -4,7 +4,9 @@
 \name{net.kegg}
 \alias{net.kegg}
 \title{A more compact alternative global network for the network enrichment analysis}
-\format{A list, see \code{\link{import.net}}}
+\format{
+A list, see \code{\link{import.net}}
+}
 \usage{
 data(net.kegg)
 }
@@ -16,4 +18,3 @@ head(net.kegg)
 
 }
 \keyword{datasets}
-

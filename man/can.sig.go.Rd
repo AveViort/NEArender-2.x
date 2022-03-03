@@ -4,7 +4,9 @@
 \name{can.sig.go}
 \alias{can.sig.go}
 \title{Example functional gene sets (FGS) from GO and KEGG}
-\format{An object, i.e. a list with FGS IDs as names and vectors of gene IDs as member (34 FGSs in total). See see \code{\link{import.gs}}}
+\format{
+An object, i.e. a list with FGS IDs as names and vectors of gene IDs as member (34 FGSs in total). See see \code{\link{import.gs}}
+}
 \usage{
 data(can.sig.go)
 }
@@ -16,4 +18,3 @@ head(can.sig.go)
 
 }
 \keyword{datasets}
-

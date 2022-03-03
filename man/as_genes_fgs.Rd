@@ -23,4 +23,3 @@ print(fgs.genes[1:10])
 \seealso{
 \code{\link{import.net}}, \code{\link{import.gs}}
 }
-
