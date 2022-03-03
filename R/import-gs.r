@@ -15,8 +15,7 @@
 #' @return A list with entry names that correspond AGS/FGS IDs in the input file and gene/protein IDs as elements of each entry.
 #' @seealso \code{\link{mutations2ags}}, \link{samples2ags}
 #' @examples
-#' data(can.sig.go)
-#' fpath <- can.sig.go
+#' fpath <- system.file("extdata", "CAN_SIG_GO.34.txt", package="NEArender")
 #' fgs.list <- import.gs(fpath)
 #' summary(fgs.list)
 #'

@@ -34,8 +34,7 @@
 #' @keywords ROC
 
 #' @examples
-#' data(can.sig.go);
-#' fpath <- can.sig.go
+#' fpath <- system.file("extdata", "CAN_SIG_GO.34.txt", package="NEArender")
 #' gs.list <- import.gs(fpath, Lowercase = 1, col.gene = 2, col.set = 3);
 #' data(net.kegg)
 #' netpath <- net.kegg

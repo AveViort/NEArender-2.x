@@ -11,8 +11,7 @@
 
 #' @examples
 #' ags.list <- samples2ags(fantom5.43samples, Ntop=20, method="topnorm")
-#' data(can.sig.go)
-#' fpath <- can.sig.go
+#' fpath <- system.file("extdata", "CAN_SIG_GO.34.txt", package="NEArender")
 #' fgs.list <- import.gs(fpath)
 #' data(net.kegg)
 #' netpath <- net.kegg
