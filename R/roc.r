@@ -31,7 +31,7 @@
 #' \donttest{
 #' b0 <- benchmark (NET = net,
 #'  GS = gs.list,
-#'  echo=1, graph=TRUE, na.replace = 0, mask = ".", minN = 0,
+#'  echo=1, na.replace = 0, mask = ".", minN = 0,
 #'  coff.z = 1.965, coff.fdr = 0.1, Parallelize=2);
 #'  roc(b0, coff.z = 1.64);
 #' }
@@ -45,7 +45,7 @@
 #' net <- import.net(netpath, col.1 = 1, col.2 = 2, Lowercase = 1, echo = 1)
 #' b1[[mask]][[file.net]] <- benchmark (NET = net, GS = gs.list,
 #' gs.gene.col = 2, gs.group.col = 3, net.gene1.col = 1, net.gene2.col = 2,
-#' echo=1, graph=FALSE, na.replace = 0, mask = mask, minN = 0, Parallelize=2);
+#' echo=1, na.replace = 0, mask = mask, minN = 0, Parallelize=2);
 #' }}
 #' par(mfrow=c(2,1));
 #' roc(b1[["kegg_"]], coff.z = 2.57,main="kegg_");

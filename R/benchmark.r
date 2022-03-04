@@ -63,7 +63,7 @@
 
 
 benchmark <- function(NET = "merged6_and_wir1_HC2", GS = "CAN_SIG_GO.34.txt", gs.gene.col = 2, gs.group.col = 3, net.gene1.col = 1, 
-	net.gene2.col = 2, echo=1, graph=FALSE, na.replace = 0, mask = '.', minN = 0, coff.z = 1.965, coff.fdr = 0.1, Parallelize=1) 
+	net.gene2.col = 2, echo = 1, graph = FALSE, na.replace = 0, mask = '.', minN = 0, coff.z = 1.965, coff.fdr = 0.1, Parallelize = 1) 
 {
 	if (is.list(NET)) {
 		net.list <- NET
@@ -76,7 +76,7 @@ benchmark <- function(NET = "merged6_and_wir1_HC2", GS = "CAN_SIG_GO.34.txt", gs
 	} else {
 		ags.list <- import.gs (GS, Lowercase=1, col.gene = gs.gene.col, col.set = gs.group.col, gs.type = 'a');
 	}
-	n1  <- nea.render(AGS=ags.list, FGS=fgs.list, NET = net.list, Lowercase = 1, echo=echo, na.replace = na.replace, Parallelize=Parallelize);
+	n1  <- nea.render(AGS = ags.list, FGS = fgs.list, NET = net.list, Lowercase = 1, echo = echo, na.replace = na.replace, Parallelize = Parallelize);
 	# save(n1, file="nea4ROCs.RData");
 	gc();
 	l1 <- lapply(net.list$links, function (x) round(log2(length(x))));

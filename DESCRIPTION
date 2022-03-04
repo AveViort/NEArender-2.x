@@ -1,6 +1,6 @@
 Package: NEArender
 Title: Network Enrichment Analysis
-Version: 1.5
+Version: 2.0
 Authors@R: c(person(given = "Andrey", family = "Alexeyenko", role = c("aut", "cph","ths"), email = "andrej.alekseenko@scilifelab.se"), person(given = "Ashwini", family = "Jeggari", role = c("aut","cre"),email="ashwinipriya.jeggari@ki.se"))
 Maintainer: Ashwini Jeggari <ashwinipriya.jeggari@ki.se>
 Description: Performs network enrichment analysis against functional gene sets.

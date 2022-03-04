@@ -38,7 +38,7 @@
 #' summary(fgs.list)
 #' netpath <- system.file("extdata", "merged6_and_wir1_HC2", package="NEArender")
 #' net <- import.net(netpath)
-#' n1 <- nea.render(AGS=ags.list[1:10], FGS=fgs.list[1:10], NET=net, graph=FALSE)
+#' n1 <- nea.render(AGS=ags.list[1:10], FGS=fgs.list[1:10], NET=net)
 #' hist(n1$chi, breaks=100)
 #' hist(n1$z, breaks=100)
 #' hist(n1$p, breaks=100)
@@ -46,7 +46,6 @@
 #' @export
 
 nea.render <- function (AGS, FGS, NET,  Lowercase = 1, ags.gene.col = 2, ags.group.col = 3, fgs.gene.col = 2, fgs.group.col = 3, net.gene1.col = 1, net.gene2.col = 2, echo = 1, 
-	#graph = FALSE, 
 	na.replace = 0, members = FALSE, digitalize = TRUE, Parallelize = 1, diff.enr = FALSE, save.ags = FALSE, save.fgs = FALSE, save.net = FALSE) 
 {
 	if (Parallelize != 1) {
@@ -135,7 +134,7 @@ nea.render <- function (AGS, FGS, NET,  Lowercase = 1, ags.gene.col = 2, ags.gro
 
 	if (digitalize) {
 		print("Rendering integer IDs...");
-		print(system.time(mapped <- char2int(net.list, ags.list, fgs.list, Parallelize = Parallelize)));
+		print(system.time(mapped <- char2int.fast(net.list, ags.list, fgs.list, Parallelize = Parallelize)));
 		net.list$links <- mapped$net;
 		ags.list <- mapped$gs[["a"]];
 		fgs.list <- mapped$gs[["b"]];
