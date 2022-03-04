@@ -26,8 +26,7 @@
 #' # Benchmark and plot one networks on the whole set of test GSs, using no mask:
 #' fpath <- system.file("extdata", "CAN_SIG_GO.34.txt", package="NEArender")
 #' gs.list <- import.gs(fpath, Lowercase = 1, col.gene = 2, col.set = 3);
-#' data(net.kegg)
-#' netpath <- net.kegg
+#' netpath <- system.file("extdata", "merged6_and_wir1_HC2", package="NEArender")
 #' net <- import.net(netpath)
 #' \donttest{
 #' b0 <- benchmark (NET = net,

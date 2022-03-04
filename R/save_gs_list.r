@@ -10,8 +10,7 @@
 #' @references \url{https://www.evinet.org/}
 
 #' @examples
-#' data(net.kegg)
-#' netpath <- net.kegg
+#' netpath <- system.file("extdata", "merged6_and_wir1_HC2", package="NEArender")
 #' net <- import.net(netpath);
 #' fgs.genes <- as_genes_fgs(net);
 #' save_gs_list(fgs.genes, File = "single_gene_ags.groups.tsv");

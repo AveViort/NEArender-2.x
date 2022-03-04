@@ -15,8 +15,7 @@ save.gs.list(gs.list, ID = "gs", attributes = FALSE, shape = NA)
 Each line in this file represents one gene/protein from an AGS/FGS and is accompanied with respective AGS/FGS ID. This format can be used e.g. as input at web site \href{https://www.evinet.org/}{EviNet}
 }
 \examples{
-data(net.kegg)
-netpath <- net.kegg
+netpath <- system.file("extdata", "merged6_and_wir1_HC2", package="NEArender")
 net <- import.net(netpath);
 fgs.genes <- as_genes_fgs(net);
 save_gs_list(fgs.genes, File = "single_gene_ags.groups.tsv");

@@ -13,8 +13,7 @@
 #' ags.list <- samples2ags(fantom5.43samples, Ntop=20, method="topnorm")
 #' fpath <- system.file("extdata", "CAN_SIG_GO.34.txt", package="NEArender")
 #' fgs.list <- import.gs(fpath)
-#' data(net.kegg)
-#' netpath <- net.kegg
+#' netpath <- system.file("extdata", "merged6_and_wir1_HC2", package="NEArender")
 #' net <- import.net(netpath)
 #' n1 <- nea.render(AGS=ags.list, FGS=fgs.list, NET=net, graph=TRUE)
 #' set.heat(ags.list, fgs.list, n1$z, Log=FALSE)
